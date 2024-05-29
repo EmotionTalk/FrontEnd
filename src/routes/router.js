@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../pages/Main"
+import First from "../pages/First";
 import Login from "../pages/Login"
+import KakaoRedirect from "../pages/KakaoRedirect";
 
 
 export const router=createBrowserRouter([
@@ -9,8 +11,16 @@ export const router=createBrowserRouter([
         element:<Main/>
     },
     {
-        path:'/login',
-        element:<Login/>
+        path:'/first',
+        element:<First/>
+    },
+    // {
+    //     path:'/login',
+    //     element:<Login/>
+    // },
+    {
+        path:'/oauth',
+        element:<KakaoRedirect/>
     }
 ])
 

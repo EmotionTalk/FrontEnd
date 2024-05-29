@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.Back1{
+    position: fixed;
+    top:0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+}
+
+h2 {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 24px;
+}
+
+.audio-display {
+    width: 100%;
+    height: 60px;
+    background-color: #f9f9f9;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    color: #333;
+}
+
+.play-button {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.play-button.playing {
+    /* play_icon.png 대신 pause_icon.png가 사용됩니다 */
+}
+
+.play-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.record {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.send {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.record.active {
+    /* 녹음 중일 때의 스타일 변경 */
+}
+
+.record.active:hover {
+    /* 녹음 중일 때 호버 스타일 변경 */
+}
+
+.record.active:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.audio-display span {
+    color: #333;
+    font-size: 18px;
+}

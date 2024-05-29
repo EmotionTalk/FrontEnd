@@ -1,0 +1,39 @@
+@mixin mobile {
+    @media screen and (max-width: 480px) {
+        @content;
+    }
+}
+@mixin tablet {
+    @media screen and (max-width: 768px){
+        @content;
+    }
+}
+@mixin laptop {
+    @media screen and (max-width: 1200px){
+        @content;
+    }
+}
+
+
+
+.Home{
+    background-color: rgb(255, 255, 255);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container{
+    border-radius: 10px;
+    width: 70%;
+    height: 85%;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), /* 위쪽 그림자 */
+    0 -4px 10px rgba(0, 0, 0, 0.1), /* 아래쪽 그림자 */
+    4px 0 10px rgba(0, 0, 0, 0.1), /* 오른쪽 그림자 */
+    -4px 0 10px rgba(0, 0, 0, 0.1); /* 왼쪽 그림자 */
+    @include tablet{
+        width: 90%;
+    }
+}

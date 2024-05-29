@@ -1,0 +1,62 @@
+.Back{
+    position: fixed;
+    top:0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        background-color: rgba(0,0,0,0);
+    }
+    to{
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+
+.Container{
+    background-color: white;
+    /* padding: 60px 20px 80px 20px;
+    border-radius: 12px; */
+    padding: 40px 20px 60px 20px;
+    border-radius: 16px;
+    width:460px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    animation: slideIn 0.3s ease;
+    /*  */
+    font-family: 'Roboto',sans-serif;
+}
+
+@keyframes slideIn{
+    from{
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.RecordBtn{
+    width:80px;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin:20px auto 0 auto;
+    color:red;
+}
+
+.ResultBtn{
+    width:60px;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin:20px auto 0 auto;
+}
