@@ -1,12 +1,12 @@
 import React from "react";
-import "./style.css";
+import "./prestyle.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import RecordIcon from "../../assets/record_icon.png";
 import StopIcon from "../../assets/stop_icon.png";
 import PlayIcon from "../../assets/play_icon.png";
 import PauseIcon from "../../assets/pause_icon.png";
 import ResetIcon from "../../assets/reset_icon.png";
-import SendIcon from "../../assets/send_icon.png";
+import SendIcon from "../../assets/send_white_icon.png";
 
 
 const RecordModal=({closeRecordModal, sendAudioFile})=>{
@@ -125,9 +125,15 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
         }
     },[audioUrl,closeRecordModal,sendAudioFile])
 
+    const getRecordButtonClass=()=>{
+        if(isRecording) return "RecordStopButton"
+        if (isRecorded) return "RecordResetButton"
+        return "RecordStartButton";
+    }
+
     return(
         <div className="RecordModalBack" onClick={closeRecordModal}>
-            <div className="RecordModalContainer"onClick={(e)=>e.stopPropagation()}>
+            <div className="RecordModalContainer" onClick={(e)=>e.stopPropagation()}>
                 <p>음성 메시지</p>
                 <div className="AudioDisplay">
                     {isRecorded ? (
@@ -145,19 +151,18 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         <span>{isRecording ? "녹음 중..." : "00:00"}</span>
                     )}
                 </div>
-                {/* 녹음 버튼들 */}
                 <div className="ButtonBox">
                     {/* 취소 */}
-                    <button className="Cancel" onClick={closeRecordModal}>취소</button>
+                    <button className="CancelButton" onClick={closeRecordModal}>취소</button>
                     {/* 녹음 / 중지 / 재녹음 */}
                     <img src={isRecording ? StopIcon : isRecorded ? ResetIcon : RecordIcon}
-                        className={`Record ${isRecording ? 'active':''}`}
+                        // className={`Record ${isRecording ? 'active':''}`}
+                        className={getRecordButtonClass()}
                         onClick={isRecorded ? handleResetRecord : handleRecordBtn}
                         alt="녹음"/>
                     {/* 전송 */}
-                    <img src={SendIcon} className="Send" onClick={handleSendAudio} alt="전송" disabled={!isRecorded}/>
+                    <img src={SendIcon} className="SendButton" onClick={handleSendAudio} alt="전송" disabled={!isRecorded}/>
                 </div>
-                {/* 오디오 재생 */}
                 {audioUrl && (
                     <audio ref={audioRef}
                         src={audioUrl}

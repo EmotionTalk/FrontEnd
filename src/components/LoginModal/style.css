@@ -30,14 +30,14 @@
 }
 
 .Container{
-    background-color: white;
+    background-color: #ffffff;
     /* padding: 60px 20px 80px 20px;
     border-radius: 12px; */
     padding: 40px 20px 60px 20px;
     border-radius: 16px;
     width:460px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     position: relative;
     animation: slideIn 0.3s ease;
     /*  */
