@@ -80,7 +80,7 @@ const Chat = ({ onClose }) => {
     <div className='chat'>
       <div className="chatInfo">
         <span>dud</span>
-        <img src={X} alt="" onClick={handleCloseClick} />
+        <img src={X} className='ix' onClick={handleCloseClick} />
         <div className="chatIcons"></div>
       </div>
       <Messages messages={messages} />
@@ -94,7 +94,7 @@ const Chat = ({ onClose }) => {
           onKeyPress={handleKeyPress}
         />
         <div className="send">
-          <img src={Mic} alt="" onClick={handleRecordBtn}/>
+          <img src={Mic} className='im' onClick={handleRecordBtn}/>
           <input
             type="file"
             style={{ display: "none" }}
@@ -103,9 +103,9 @@ const Chat = ({ onClose }) => {
           />
           {isRecordModalOpen && <RecordModal closeRecordModal={closeRecordModal}/>}
           <label htmlFor='file'>
-            <img src={Pic} alt="" />
+            <img src={Pic} className='ip' alt="" />
           </label>
-          <button onClick={handleSendMessage}>Send</button>
+          <button onClick={handleSendMessage} className='sb'>Send</button>
         </div>
       </div>
     </div>
