@@ -1,0 +1,115 @@
+/* 전체 폰트 설정 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* 모달 배경 */
+.RecordModalBack {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 모달 본체 */
+.RecordModalContainer {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* 모달 제목 */
+.RecordModalContainer p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 오디오 상태 및 시간 표시 영역 */
+.AudioDisplay {
+    margin: 20px 0;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+}
+
+/* 재생/일시정지 버튼 */
+.PlayButton {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+/* 녹음된 시간 표시 */
+.AudioDisplay span {
+    font-size: 18px;
+    color: #555;
+}
+
+/* 버튼 박스 */
+.ButtonBox {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* 취소 버튼 */
+.Cancel {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* 녹음, 중지, 재녹음 버튼 */
+.Record {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 전송 버튼 */
+.Send {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 전송 버튼 비활성화 스타일 */
+.Send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 녹음 중일 때 활성화 스타일 */
+.Record.active {
+    /* 스타일을 필요에 따라 추가하세요 */
+}
+
+/* 호버 스타일 */
+.Record:hover,
+.Send:hover,
+.Cancel:hover {
+    opacity: 0.8;
+}

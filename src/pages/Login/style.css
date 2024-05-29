@@ -1,4 +1,4 @@
-.PageContainer{
+/* .PageContainer{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,10 +33,13 @@
 
 }
 
-.Text1{
-    font-size: 18px;
-    color:#007bff;
-    margin-bottom: 20px;
+
+.LoginTitle{
+    display: flex;
+    height:22px;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
 }
 
 .LoginBtnGroup{
@@ -62,9 +65,4 @@
     font-size: 20px;
     font-weight: 600;
 }
-
-.NoLoginLink{
-    margin-top: 20px;
-    font-size: 16px;
-    color:#666
-}
+ */
