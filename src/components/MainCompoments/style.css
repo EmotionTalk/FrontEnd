@@ -19,6 +19,9 @@
     margin-top: 15px;
     cursor: pointer;
 }
+.sidebar img:hover {
+    background-color: #61abff;
+  }
 .my {
     flex: 1;
     border-right: 1px solid #ECECEC;
@@ -336,7 +339,6 @@
         border-bottom: 1px solid #ECECEC;
         background-color: #ffffff;
     }
-<<<<<<< HEAD
     .c-a{
         width: 30px;
         height: 30px;
@@ -344,8 +346,6 @@
         right: 20px;
         cursor: pointer;
     }
-=======
->>>>>>> c9fb518fda4f0c732c0ce63a9a5bd69070978c87
 
     .userChat{
         padding: 10px;
@@ -362,24 +362,17 @@
         -4px 0 10px rgba(0, 0, 0, 0.1); /* 왼쪽 그림자 */
         
     
-<<<<<<< HEAD
         .ipro{
-=======
-        img{
->>>>>>> c9fb518fda4f0c732c0ce63a9a5bd69070978c87
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
         }
-<<<<<<< HEAD
         .messageTime {
             font-size: 0.8em;
             color: gray;
           }
           
-=======
->>>>>>> c9fb518fda4f0c732c0ce63a9a5bd69070978c87
     }
     .userChat:hover{
         background-color:rgb(235, 235, 235);
@@ -399,11 +392,7 @@
         align-items: center;
         text-align: center; /* 텍스트 중앙 정렬 */
 
-<<<<<<< HEAD
         .ic {
-=======
-        img {
->>>>>>> c9fb518fda4f0c732c0ce63a9a5bd69070978c87
             width: 35%; /* 원하는 크기로 설정, 예: 150px */
             height: auto; /* 이미지 비율을 유지 */
             margin-bottom: 20px; /* 이미지와 텍스트 사이의 간격 조절 */
