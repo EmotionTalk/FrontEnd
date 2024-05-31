@@ -12,9 +12,10 @@ const Main = () => {
   const [view, setView] = useState('default');
   const [showChat, setShowChat] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-
-  const handleUserChatClick = () => {
+  const handleUserChatClick = (user) => {
+    setSelectedUser(user);
     setShowChat(true);
     setFirstClick(false);
   };
@@ -44,7 +45,7 @@ const Main = () => {
           <>
             <ChatList onUserChatClick={handleUserChatClick} />
             {firstClick && <ChatStart />}
-            {!firstClick && showChat && <Chat onClose={handleChatClose} />}
+            {!firstClick && showChat && <Chat user={selectedUser} onClose={handleChatClose} />}
           </>
         )}
         {view === 'my' && (
@@ -52,7 +53,7 @@ const Main = () => {
             <My />
             <List onUserChatClick={handleUserChatClick} />
             {!showChat && <Start />}
-            {showChat && <Chat onClose={handleChatClose} />}
+            {showChat && <Chat user={selectedUser} onClose={handleChatClose} />}
           </>
         )}
         {view === 'default' && (
@@ -60,7 +61,7 @@ const Main = () => {
             <My />
             <List onUserChatClick={handleUserChatClick} />
             {!showChat && <Start />}
-            {showChat && <Chat onClose={handleChatClose} />}
+            {showChat && <Chat user={selectedUser} onClose={handleChatClose} />}
           </>
         )}
       </div>
