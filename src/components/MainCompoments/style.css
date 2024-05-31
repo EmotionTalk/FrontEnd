@@ -377,6 +377,33 @@
     .userChat:hover{
         background-color:rgb(235, 235, 235);
     }
+    .userChatInfo {
+        flex-grow: 1; /* 남은 공간을 모두 차지 */
+        min-width: 0; /* 최소 너비 설정 */
+        margin-left: 10px; /* 좌측 여백 추가 */
+      }
+      
+      .userChatInfo span {
+        font-size: 18px;
+        font-weight: normal;
+        overflow: hidden; /* 넘칠 경우 숨김 */
+        text-overflow: ellipsis; /* 넘칠 경우 ...으로 표시 */
+        white-space: nowrap; /* 줄바꿈 방지 */
+      }
+      
+      .userChatInfo p {
+        font-size: 14px;
+        color: rgb(79, 79, 79);
+        margin-top: 5px; /* 위쪽 여백 추가 */
+      }
+      
+      .userChat .messageTime {
+        font-size: 0.8em;
+        color: gray;
+        margin-left: 10px; /* 마지막으로 보낸 시간과 채팅 간격 조정 */
+      }
+      
+      
 }
 
 /* ChatStart.jsx */
