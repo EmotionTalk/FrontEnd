@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
- 
-export function KakaoRedirect() {
+
+function KakaoRedirect() {
   const navigate = useNavigate();
+
   const code = new URL(window.location.href).searchParams.get("code");
   console.log(code);
   const headers = {

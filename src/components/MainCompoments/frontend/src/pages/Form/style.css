@@ -1,0 +1,171 @@
+.FormWrapper {
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+    margin-top: 5vh;
+}
+.ModalBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 7;
+}
+.MenuToggleBtnBox {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    z-index: 5;
+    right: 0;
+    top: 43px;
+    background-color: #fff;
+    border-radius: 13px 0 0 13px;
+    transition: right 0.5s ease;
+    flex-direction: column;
+    display: flex;
+    padding: 8px 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.MenuToggleBtnBox:hover {
+    background-color: #f0efef; 
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.8);
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.MenuToggleBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 1px 6px;
+}
+
+.MenuImage {
+    width: 30px;
+    display: block;
+    margin-top: 1px;
+    height: 30px;
+}
+
+.Logo {
+    margin-bottom: 40px;
+}
+
+.LogoImg {
+    width: 140px;
+}
+
+.FormBox {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+.FormField {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.InputField {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.InputField:focus {
+    border-color: var(--primary-color);
+}
+
+.SearchBtn {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+    min-width: 64px;
+}
+
+.SearchBtn:hover {
+    background-color: var(--sub-color1);;
+}
+
+.ResultContainer {
+    margin-top: 20px;
+}
+
+.ListBox {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0; 
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ListBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+.ListBox:hover .DeleteBtn {
+    right: 10px; /* hover 시 리스트 항목 내부의 오른쪽으로 이동 */
+    opacity: 1; /* 완전히 불투명하게 */
+    visibility: visible; /* 보이도록 */
+}
+
+.PlaceName{
+    font-weight: 900;
+}
+
+.DeleteBtn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    right: -30px; /* 초기에는 보이지 않도록 오른쪽으로 숨김 */
+    transition: right 0.3s ease, opacity 0.3s ease; /* 부드러운 이동과 투명도 변화를 위한 transition */
+    opacity: 0; /* 초기 상태에서는 완전히 투명하게 */
+    visibility: hidden; /* 초기 상태에서는 보이지 않도록 */
+
+}
+
+
+.Pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.PageButton {
+    background-color: #f9f9f9;
+    border: 1px solid #cccccc;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.PageButton:hover, .PageButton.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}

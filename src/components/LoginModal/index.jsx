@@ -5,7 +5,7 @@ import KakaoLoginBtn from "../../assets/kakao_login_medium_wide.png"
 import "./style.css";
 const KAKAO_REST_API_KEY=process.env.REACT_APP_KAKAO_REST_API_KEY;
 const KAKAO_REDIRECT_URI=`http://localhost:3000/oauth`;
-const kakaoURL=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`
+const kakaoURL=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
 function LoginModal({closeModal}){
     const handleKakaoLogin=()=>{
