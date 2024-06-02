@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import {toast} from "react-toastify";
+import {useCookieManager} from "../../customHook/useCookieManager"
 import './Modal.css';
 import X from "../../assets/fx.svg"
 
@@ -10,6 +12,7 @@ const Modal = ({ isOpen, onClose }) => {
   const [phone2, setPhone2] = useState('');
   const [phone3, setPhone3] = useState('');
   const [phoneError, setPhoneError] = useState(false);
+  const {getCookies}=useCookieManager();
 
   // isOpen이 false이면 모달을 보여주지 않음
   if (!isOpen) return null;
@@ -29,6 +32,40 @@ const Modal = ({ isOpen, onClose }) => {
       setPhoneError(true);
     }
   };
+
+  const handleAddFriendButton=()=>{
+    const phoneNumber = `${phone1}-${phone2}-${phone3}`;
+    const {accessToken}=getCookies();
+
+    fetch('http:localhost:8080/?/?',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${accessToken}`
+      },
+      body:JSON.stringify({
+        name:name,
+        phoneNumber:phoneNumber
+      })
+    })
+    .then(response=>{
+      if(!response.ok){
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data=>{
+      toast.success("친구가 성공적으로 추가되었습니다.");
+      onClose();
+    })
+    .catch(error=>{
+      toast.error("친구 추가에 실패했습니다.",{
+        position:"top-center"
+      });
+    })
+
+
+  }
 
   // JSX 반환
   return (
@@ -91,7 +128,7 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="add-button">친구추가</button>
+          <button className="add-button" onClick={handleAddFriendButton}>친구추가</button>
         </div>
       </div>
     </div>
