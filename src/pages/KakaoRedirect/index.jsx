@@ -1,33 +1,43 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useCookieManager } from "../../customHook/useCookieManager";
+import { useEffect,useState } from "react";
+
  
 export function KakaoRedirect() {
-  const navigate = useNavigate();
-  const code = new URL(window.location.href).searchParams.get("code");
-  console.log(code);
-  const headers = {
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
- 
-  useEffect(() => {
-    fetch(`보내줄 주소?code=${code}`, {
-      method: "POST", // 
-      headers: headers,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        console.log(data.result.user_id);
-        console.log(data.result.jwt);
-      })
-      .catch((error) => {
-        console.error("오류 발생", error); //
-      });
-  }, []);
- 
+  const [isAuthenticated,setIsAuthenticated]=useState(false);
+  const [errorMessage,setErrorMessage]=useState("");
+  const navigate=useNavigate();
+  const {setCookies}=useCookieManager();
+
+  const onLoginSuccess=()=>{
+    setIsAuthenticated(true);
+    setErrorMessage("");
+  }
+
+  const onLoginFailure=(message)=>{
+    setIsAuthenticated(false);
+    setErrorMessage(message);
+  }
+
+  useEffect(()=>{
+    const urlParams=new URLSearchParams(window.location.search);
+    const accessToken=urlParams.get("accessToken");
+    const refreshToken=urlParams.get("refreshToken");
+
+    if(accessToken && refreshToken){
+      setCookies(accessToken,refreshToken);
+      onLoginSuccess();
+      navigate("/");
+    }
+    else{
+      onLoginFailure("OAuth login failed. Misshing tokens.")
+      navigate("/first");
+    }
+  },[navigate,onLoginSuccess,onLoginFailure,setCookies])
+
   return (
     <div>
-      <h1>로그인 중입니다.</h1>
+      로그인중
     </div>
   );
 }
