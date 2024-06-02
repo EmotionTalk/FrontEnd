@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useCookieManager } from "../../customHook/useCookieManager";
+import LoginModal from "../../components/LoginModal";
 import Sidebar from "../../components/MainCompoments/Sidebar";
 import Chat from "../../components/MainCompoments/Chat";
 import My from "../../components/MainCompoments/My";
@@ -12,6 +14,20 @@ const Main = () => {
   const [view, setView] = useState('default');
   const [showChat, setShowChat] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
+  const [showLoginModal, setShowLoginModal]=useState(false);
+
+  const {getCookies}=useCookieManager();
+
+  useEffect(()=>{
+    const {accessToken,refreshToken}=getCookies();
+    if(!accessToken || !refreshToken){
+      setShowLoginModal(true);
+    }
+  },[getCookies])
+
+  const handleCloseModal = () => {
+    setShowLoginModal(false);
+  };
 
 
   const handleUserChatClick = () => {
@@ -38,6 +54,8 @@ const Main = () => {
 
   return (
     <div className="Home">
+      {showLoginModal && <LoginModal closeModal={handleCloseModal}/>}
+      {!showLoginModal && (
       <div className="container">
         <Sidebar onChatClick={handleChatView} onMyClick={handleMyView} />
         {view === 'chat' && (
@@ -64,6 +82,7 @@ const Main = () => {
           </>
         )}
       </div>
+      )}
     </div>
   );
 };

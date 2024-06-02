@@ -3,6 +3,7 @@ import Logo from "../../assets/et_logo.png";
 import KakaoLogo from "../../assets/kakao_logo.png"
 import KakaoLoginBtn from "../../assets/kakao_login_medium_wide.png"
 import "./style.css";
+
 const KAKAO_REST_API_KEY=process.env.REACT_APP_KAKAO_REST_API_KEY;
 // const KAKAO_REDIRECT_URI=`http://localhost:3000/oauth`;
 const KAKAO_REDIRECT_URI=process.env.REACT_APP_REDIRECT_URL;
