@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { useCookieManager } from './customHook/useCookieManager';
 import router from './routes/router';
-import {RouterProvider} from 'react-router-dom'
+import {RouterProvider} from 'react-router-dom';
+import { ToastContainer , toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const [isAuthenticated,setIsAuthenticated]=useState(false);
   const [errorMessage,setErrorMessage]=useState("");
@@ -27,8 +30,10 @@ function App() {
   }, [getCookies])
 
   return (
-
+    <div>
+    <ToastContainer></ToastContainer>
     <RouterProvider router={router}/>
+    </div>
   );
 }
 
