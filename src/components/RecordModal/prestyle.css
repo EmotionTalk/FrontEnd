@@ -69,6 +69,11 @@
 .PlayButton{
     width:24px;
     cursor: pointer;
+    transition: transform 0.4s ease-in-out;
+}
+
+.PlayButton:active{
+    transform: scale(0.9);
 }
 
 .ButtonBox{
@@ -87,24 +92,43 @@
     font-size: 16px;
     margin-bottom: 0;
     vertical-align: bottom;
+    cursor: pointer;
+    transition: color 0.4s ease-in-out;
+}
+
+.CancelButton:hover{
+    color:#ff4d4d
+}
+
+.RecordStartButton,
+.RecordStopButton,
+.RecordResetButton {
+    cursor: pointer;
+    transition: transform 0.4s ease-in-out;
+}
+
+.RecordStartButton:active,
+.RecordStopButton:active,
+.RecordResetButton:active {
+    transform: scale(0.9);
 }
 
 .RecordStartButton{
     width:60px;
     height:60px;
-    border: 2px solid #1B83Fc;
-    border-radius: 90px;
+    /* border: 2px solid #1B83Fc; */
+    /* border-radius: 90px; */
 }
 
 .RecordStopButton{
     width:44px;
     height:44px;
-    border: 2px solid #1B83Fc;
-    border-radius: 90px;
+    /* border: 2px solid #1B83Fc; */
+    /* border-radius: 90px; */
 }
 
 .RecordResetButton{
-    height:32px;
+    height:28px;
     margin-bottom: 0;
 }
 
@@ -114,4 +138,16 @@
     background-color: #1B83Fc;
     border:4px solid #1B83Fc;
     border-radius: 90px;
+    cursor: pointer;
+    transition: background-color 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.SendButton:active {
+    transform: scale(0.9);
+}
+
+.SendButton[disabled] {
+    background-color: #a0c4ff; /* 활성화되지 않았을 때 */
+    border: 4px solid #a0c4ff;
+    cursor: not-allowed;
 }
