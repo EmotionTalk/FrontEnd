@@ -161,7 +161,15 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         onClick={isRecorded ? handleResetRecord : handleRecordBtn}
                         alt="녹음"/>
                     {/* 전송 */}
-                    <img src={SendIcon} className="SendButton" onClick={handleSendAudio} alt="전송" disabled={!isRecorded}/>
+                    <img src={SendIcon}
+                    className="SendButton"
+                    onClick={handleSendAudio}
+                    alt="전송"
+                    disabled={!isRecorded}
+                    style={{
+                        opacity:isRecorded ? 1:0.5,
+                        pointerEvents:isRecorded ? "auto" : "none",
+                    }}/>
                 </div>
                 {audioUrl && (
                     <audio ref={audioRef}
