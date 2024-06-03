@@ -123,11 +123,12 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                     return sendAudioFile(audioFile); // 서버로 전송
                 })
                 .then(() => {
-                    toast.success("오디오 파일이 성공적으로 전송되었습니다.");
+                    // toast.success("오디오 파일이 성공적으로 전송되었습니다.");
                     closeRecordModal();
                 })
                 .catch(() => {
-                    toast.error("오디오 파일 전송에 실패했습니다.");
+                    // toast.error("오디오 파일 전송에 실패했습니다.");
+                    closeRecordModal();
                 });
         }
     },[audioUrl,closeRecordModal,sendAudioFile])
