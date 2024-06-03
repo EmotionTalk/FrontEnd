@@ -23,7 +23,6 @@ const My = () => {
           })
           .then(response => {
             if (!response.ok) {
-              setUserNickName('로그인을 해주세요!');
               throw new Error('Network response was not ok');
             }
             return response.json(); // JSON 형식으로 응답 데이터를 파싱
@@ -34,7 +33,6 @@ const My = () => {
             console.log(data);
           })
           .catch(error => {
-            setUserNickName('로그인을 해주세요!');
           });
     }
     
