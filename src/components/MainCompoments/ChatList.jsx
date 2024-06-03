@@ -24,9 +24,9 @@ const ChatList = ({ onUserChatClick }) => {
           <img src={Profile} className='ipro'/>
           <div className="userChatInfo">
           {/* 채팅 상대 */}
-            <span>dud</span> 
+            <span>권건표</span> 
             {/* 마지막으로 보낸 */}
-            <p>hi</p>
+            <p>오늘 왜 회의 말도 없이 안 오셨죠?</p>
           </div>
         </div>
         {/* 사용자 채팅 요소 */}
@@ -34,9 +34,9 @@ const ChatList = ({ onUserChatClick }) => {
           <img src={Profile} className='ipro'/>
           <div className="userChatInfo">
           {/* 채팅 상대 */}
-            <span>dud</span> 
+            <span>홍윤기</span> 
             {/* 마지막으로 보낸 */}
-            <p>hi</p>
+            <p>소프트웨어 융기~</p>
           </div>
         </div>
         {/* 사용자 채팅 요소 */}
@@ -44,9 +44,9 @@ const ChatList = ({ onUserChatClick }) => {
           <img src={Profile} className='ipro'/>
           <div className="userChatInfo">
           {/* 채팅 상대 */}
-            <span>dud</span> 
+            <span>이유진</span> 
             {/* 마지막으로 보낸 */}
-            <p>hi</p>
+            <p>라멘 먹고 싶다.</p>
           </div>
         </div>
           </div>

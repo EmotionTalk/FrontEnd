@@ -5,13 +5,13 @@ import Angry from "../../assets/angry.svg"
 
 const ResultModal = ({ show, onClose }) => {
   return (
-    <div className={show ? 'modal-overlay' : 'hidden'} onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div className={show ? 'modal-overlay1' : 'hidden'} onClick={onClose}>
+      <div className="modal1" onClick={(e) => e.stopPropagation()}>
         <img src={X} className='rx' onClick={onClose} />
-        <div className="modal-header">
+        <div className="modal-header1">
         <img src={Angry} className="emo" alt="Emotion" />
         </div>
-        <div className="modal-body">
+        <div className="modal-body1">
           <p>지금은 화난 상태에요.</p>
           <p>"먼저, 제가 오늘 회의에 말도 없이 참석하지 않은 점 정말 죄송합니다. 
             회의 참석이 중요한데 제가 그 점을 소홀히 한 것 같습니다. 

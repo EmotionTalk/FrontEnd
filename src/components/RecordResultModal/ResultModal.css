@@ -1,5 +1,5 @@
 /* ResultModal.css */
-.modal-overlay {
+.modal-overlay1 {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,10 +8,10 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: stretch; /* 세로 중앙 정렬 해제 */
+  align-items: center;
   z-index: 1000;
 
-  .modal {
+  .modal1 {
     background: white;
     border-radius: 10px;
     height: 400px;
@@ -27,7 +27,7 @@
   cursor: pointer;
 }
 
-.modal-header {
+.modal-header1 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,16 +36,15 @@
   .emo {
     width: 100px;
     height: 100px;
-    margin-left: 250px;
   }
 }
 
-.modal-body {
+.modal-body1 {
   text-align: center;
 }
 
-.modal-body p {
-  margin-bottom: 15px;
+.modal-body1 p {
+  margin-bottom: 35px;
   white-space: pre-line;
   line-height: 1.5; /* 줄 간격을 설정해 가독성을 높입니다. */
 }
