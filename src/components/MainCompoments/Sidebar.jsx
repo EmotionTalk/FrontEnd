@@ -9,11 +9,11 @@ import "./style.css";
 const Sidebar = ({ onChatClick, onMyClick }) => {
   return (
     <div className='sidebar'>
-      <img src={Logo} alt="" className='logo-img' />
+      <img src={Logo} alt="" className='logo-img' onClick={onMyClick} />
       <img src={Per} alt="" onClick={onMyClick} />
       <img src={Chat} alt="" onClick={onChatClick} />
       <img src={Q} alt="" />
-      <img src={Back} alt="" />
+      <img src={Back} alt=""  />
     </div>
   );
 };
