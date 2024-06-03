@@ -28,7 +28,7 @@ const Chat = ({ onClose }) => {
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      // const data = await response.json();
       toast.success('파일이 성공적으로 업로드되었습니다.');
     } catch (error) {
       toast.error('파일 업로드에 실패했습니다.');

@@ -7,6 +7,7 @@ import PlayIcon from "../../assets/play_icon.png";
 import PauseIcon from "../../assets/pause_icon.png";
 import ResetIcon from "../../assets/reset_icon.png";
 import SendIcon from "../../assets/send_white_icon.png";
+import {toast} from "react-toastify";
 
 const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [isRecording,setIsRecording]=useState(false); // 녹음 중인지 여부
@@ -119,9 +120,16 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         type:"audio/wav",
                         lastModified:new Date(),
                     });
-                    sendAudioFile(audioFile); // 서버로 전송
+                    return sendAudioFile(audioFile); // 서버로 전송
+                })
+                .then(() => {
+                    // toast.success("오디오 파일이 성공적으로 전송되었습니다.");
                     closeRecordModal();
                 })
+                .catch(() => {
+                    // toast.error("오디오 파일 전송에 실패했습니다.");
+                    closeRecordModal();
+                });
         }
     },[audioUrl,closeRecordModal,sendAudioFile])
 
