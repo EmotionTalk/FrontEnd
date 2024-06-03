@@ -69,13 +69,13 @@ const ChatList = ({ onUserChatClick, lastMessages }) => {
           </div>
         </div>
         {/* 사용자 채팅 요소 */}
-        <div className="userChat" onClick={() => handleChatClick("홍윤기")}>
+        <div className="userChat" onClick={() => handleChatClick("남주영")}>
           <img src={Profile} className='ipro' alt="프로필 이미지" />
           <div className="userChatInfo">
             {/* 채팅 상대 */}
-            <span>홍윤기</span> 
+            <span>남주영</span> 
             {/* 마지막으로 보낸 메시지 */}
-            <p>{lastMessages["홍윤기"]}</p>
+            <p>{lastMessages["남주영"]}</p>
           </div>
         </div>
         {/* 사용자 채팅 요소 */}
