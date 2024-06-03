@@ -122,6 +122,7 @@ import Mic from "../../assets/mic.svg";
 import Pic from "../../assets/pic.png";
 import X from "../../assets/x.svg";
 import RecordModal from '../RecordModal';
+import {toast} from "react-toastify";
 
 const Chat = ({ onClose, userName, messages, onSendMessage }) => {
   const [message, setMessage] = useState("");
@@ -228,5 +229,3 @@ const Chat = ({ onClose, userName, messages, onSendMessage }) => {
 };
 
 export default Chat;
-
-
