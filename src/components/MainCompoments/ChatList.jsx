@@ -29,6 +29,26 @@ const ChatList = ({ onUserChatClick }) => {
             <p>hi</p>
           </div>
         </div>
+        {/* 사용자 채팅 요소 */}
+        <div className="userChat" onClick={handleChatClick}>
+          <img src={Profile} className='ipro'/>
+          <div className="userChatInfo">
+          {/* 채팅 상대 */}
+            <span>dud</span> 
+            {/* 마지막으로 보낸 */}
+            <p>hi</p>
+          </div>
+        </div>
+        {/* 사용자 채팅 요소 */}
+        <div className="userChat" onClick={handleChatClick}>
+          <img src={Profile} className='ipro'/>
+          <div className="userChatInfo">
+          {/* 채팅 상대 */}
+            <span>dud</span> 
+            {/* 마지막으로 보낸 */}
+            <p>hi</p>
+          </div>
+        </div>
           </div>
     </div>
   );
