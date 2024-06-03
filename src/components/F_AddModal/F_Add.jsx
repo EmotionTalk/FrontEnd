@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './Modal.css';
-import X from "../../assets/fx.svg";
-import { useCookieManager } from '../../storage/cookieManager';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import X from "../../assets/fx.svg"
+import {toast} from "react-toastify";
+import {useCookieManager} from "../../customHook/useCookieManager"
 
 // 국가번호 리스트 (필요에 따라 확장 가능)
 const countryCodes = [
@@ -24,14 +23,17 @@ const Modal = ({ isOpen, onClose }) => {
   const [countryCode, setCountryCode] = useState('+82'); // 기본 국가번호 설정
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState(false);
-  const { getCookies } = useCookieManager();
+  const {getCookies}=useCookieManager();
 
   // isOpen이 false이면 모달을 보여주지 않음
   if (!isOpen) return null;
 
   // 이름 입력 시 상태 업데이트
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    const value = e.target.value;
+    if (value.length <= 20) {
+      setName(value);
+    }
   };
 
   // 전화번호 입력 시 상태 업데이트 및 유효성 검사
@@ -45,38 +47,40 @@ const Modal = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleAddFriendButton=()=>{
+    const fullPhoneNumber = `${countryCode}${phone}`;
+    const accessToken = getCookies().accessToken;
+
+    fetch('http://localhost:8080/friend/newFriend',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${accessToken}`
+      },
+      body:JSON.stringify({ name,fullPhoneNumber })
+    })
+    .then(response=>{
+      if(!response.ok){
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data=>{
+      toast.success("친구가 성공적으로 추가되었습니다.");
+      onClose();
+    })
+    .catch(error=>{
+      toast.error("친구 추가에 실패했습니다.",{
+        position:"top-center"
+      });
+    })
+
+
+  }
+  
   // 국가번호 변경 시 상태 업데이트
   const handleCountryCodeChange = (e) => {
     setCountryCode(e.target.value);
-  };
-
-  const addNewFriend = () => {  
-    const localAccessToken = getCookies().accessToken;
-    const fullPhoneNumber = `${countryCode}${phone}`;
-
-    fetch('http://localhost:8080/friend/newFriend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localAccessToken}` 
-      },
-      body: JSON.stringify({ name, fullPhoneNumber })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json(); // JSON 형식으로 응답 데이터를 파싱
-    })
-    .then(data => {
-      // 응답 데이터(data)를 처리
-      console.log(data);
-      toast.success('친구추가 성공!');
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      toast.error('친구추가 실패했습니다.');
-    });
   };
 
   // JSX 반환
@@ -121,7 +125,7 @@ const Modal = ({ isOpen, onClose }) => {
                 type="text"
                 id="phone"
                 className="inputline3"
-                placeholder="10-1234-1234"
+                placeholder="전화번호를 입력하세요"
                 value={phone}
                 onChange={handlePhoneChange}
               />
@@ -132,10 +136,9 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="add-button" onClick={addNewFriend}>친구추가</button>
+          <button className="add-button" onClick={handleAddFriendButton} >친구추가</button>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };
