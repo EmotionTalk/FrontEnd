@@ -103,7 +103,7 @@ const Chat = ({ onClose }) => {
   return (
     <div className='chat'>
       <div className="chatInfo">
-        <span>dud</span>
+        <span>권건표</span>
         <img src={X} className='ix' onClick={handleCloseClick} />
         <div className="chatIcons"></div>
       </div>
