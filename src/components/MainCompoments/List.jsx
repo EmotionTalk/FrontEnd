@@ -120,6 +120,12 @@ const List = ({ onUserChatClick }) => {
             <span>이유진</span>
           </div>
         </div>
+        <div className="users" onClick={() => handleUserChatClick("임종설")}>
+          <img src={Profile} alt="Profile" />
+          <div className="userChatInfo">
+            <span>임종설</span>
+          </div>
+        </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </div>
