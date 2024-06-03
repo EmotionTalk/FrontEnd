@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Search from './Search';
 import Profile from "../../assets/pro.jpg";
-import Modal from '../F_AddModal/F_Add'; // 경로를 정확히 설정하세요.
+import Modal from '../F_AddModal/F_Add';
 import "./style.css";
 import FA from "../../assets/친구추가.svg";
 
 const List = ({ onUserChatClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [users, setUsers] = useState([]);
 
-  const handleUserChatClick = () => {
-    onUserChatClick(); // 클릭 시 onUserChatClick 함수 호출
+  useEffect(() => {
+    // 백엔드에서 사용자 데이터를 가져오는 함수
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('/api/users'); // 백엔드 엔드포인트 URL에 맞게 수정
+        setUsers(response.data);
+      } catch (error) {
+        console.error('사용자 데이터를 가져오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleUserChatClick = (userId) => {
+    onUserChatClick(userId); // userId를 부모 컴포넌트에 전달
   };
 
   const openModal = () => {
@@ -28,27 +44,14 @@ const List = ({ onUserChatClick }) => {
       </div>
       <Search />
       <div className='chats'>
-        <div className="users" onClick={handleUserChatClick}>
-          <img src={Profile} alt="Profile" />
-          <div className="userChatInfo">
-            <span>dud</span>
-            <p>둗남이</p>
+        {users.map(user => (
+          <div key={user.id} className="users" onClick={() => handleUserChatClick(user.id)}>
+            <img src={user.profileImage || Profile} alt="Profile" />
+            <div className="userChatInfo">
+              <span>{user.name}</span>
+            </div>
           </div>
-        </div>
-        <div className="users" onClick={handleUserChatClick}>
-          <img src={Profile} alt="Profile" />
-          <div className="userChatInfo">
-            <span>팀장</span>
-            <p>연락 안 봐요</p>
-          </div>
-        </div>
-        <div className="users" onClick={handleUserChatClick}>
-          <img src={Profile} alt="Profile" />
-          <div className="userChatInfo">
-            <span>소프트웨어융기</span>
-            <p>종합설계 소프트웨어융기 팀</p>
-          </div>
-        </div>
+        ))}
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </div>
