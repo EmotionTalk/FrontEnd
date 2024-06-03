@@ -48,19 +48,16 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleAddFriendButton=()=>{
-    const phoneNumber = `${countryCode}-${phone}`;
-    const {accessToken}=getCookies();
+    const fullPhoneNumber = `${countryCode}${phone}`;
+    const accessToken = getCookies().accessToken;
 
-    fetch('http:localhost:8080/?/?',{
+    fetch('http://localhost:8080/friend/newFriend',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
         'Authorization':`Bearer ${accessToken}`
       },
-      body:JSON.stringify({
-        name:name,
-        phoneNumber:phoneNumber
-      })
+      body:JSON.stringify({ name,fullPhoneNumber })
     })
     .then(response=>{
       if(!response.ok){
