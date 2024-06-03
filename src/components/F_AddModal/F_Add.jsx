@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Modal.css';
 import X from "../../assets/fx.svg"
+import {toast} from "react-toastify";
+import {useCookieManager} from "../../customHook/useCookieManager"
 
 // 국가번호 리스트 (필요에 따라 확장 가능)
 const countryCodes = [
@@ -14,7 +16,6 @@ const countryCodes = [
   // 추가적인 국가 코드들...
 ];
 
-
 // Modal 컴포넌트 정의
 const Modal = ({ isOpen, onClose }) => {
   // 상태 변수 정의
@@ -22,13 +23,17 @@ const Modal = ({ isOpen, onClose }) => {
   const [countryCode, setCountryCode] = useState('+82'); // 기본 국가번호 설정
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState(false);
+  const {getCookies}=useCookieManager();
 
   // isOpen이 false이면 모달을 보여주지 않음
   if (!isOpen) return null;
 
   // 이름 입력 시 상태 업데이트
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    const value = e.target.value;
+    if (value.length <= 20) {
+      setName(value);
+    }
   };
 
   // 전화번호 입력 시 상태 업데이트 및 유효성 검사
@@ -41,6 +46,40 @@ const Modal = ({ isOpen, onClose }) => {
       setPhoneError(true);
     }
   };
+
+  const handleAddFriendButton=()=>{
+    const phoneNumber = `${countryCode}-${phone}`;
+    const {accessToken}=getCookies();
+
+    fetch('http:localhost:8080/?/?',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${accessToken}`
+      },
+      body:JSON.stringify({
+        name:name,
+        phoneNumber:phoneNumber
+      })
+    })
+    .then(response=>{
+      if(!response.ok){
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data=>{
+      toast.success("친구가 성공적으로 추가되었습니다.");
+      onClose();
+    })
+    .catch(error=>{
+      toast.error("친구 추가에 실패했습니다.",{
+        position:"top-center"
+      });
+    })
+
+
+  }
 
   // 국가번호 변경 시 상태 업데이트
   const handleCountryCodeChange = (e) => {
@@ -100,7 +139,7 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="add-button">친구추가</button>
+          <button className="add-button" onClick={handleAddFriendButton} >친구추가</button>
         </div>
       </div>
     </div>
