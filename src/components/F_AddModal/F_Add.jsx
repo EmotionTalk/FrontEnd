@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './Modal.css';
-import X from "../../assets/fx.svg"
+import X from "../../assets/fx.svg";
+import { useCookieManager } from '../../storage/cookieManager';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // 국가번호 리스트 (필요에 따라 확장 가능)
 const countryCodes = [
@@ -14,7 +17,6 @@ const countryCodes = [
   // 추가적인 국가 코드들...
 ];
 
-
 // Modal 컴포넌트 정의
 const Modal = ({ isOpen, onClose }) => {
   // 상태 변수 정의
@@ -22,6 +24,7 @@ const Modal = ({ isOpen, onClose }) => {
   const [countryCode, setCountryCode] = useState('+82'); // 기본 국가번호 설정
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState(false);
+  const { getCookies } = useCookieManager();
 
   // isOpen이 false이면 모달을 보여주지 않음
   if (!isOpen) return null;
@@ -45,6 +48,35 @@ const Modal = ({ isOpen, onClose }) => {
   // 국가번호 변경 시 상태 업데이트
   const handleCountryCodeChange = (e) => {
     setCountryCode(e.target.value);
+  };
+
+  const addNewFriend = () => {  
+    const localAccessToken = getCookies().accessToken;
+    const fullPhoneNumber = `${countryCode}${phone}`;
+
+    fetch('http://localhost:8080/friend/newFriend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localAccessToken}` 
+      },
+      body: JSON.stringify({ name, fullPhoneNumber })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // JSON 형식으로 응답 데이터를 파싱
+    })
+    .then(data => {
+      // 응답 데이터(data)를 처리
+      console.log(data);
+      toast.success('친구추가 성공!');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      toast.error('친구추가 실패했습니다.');
+    });
   };
 
   // JSX 반환
@@ -89,7 +121,7 @@ const Modal = ({ isOpen, onClose }) => {
                 type="text"
                 id="phone"
                 className="inputline3"
-                placeholder="전화번호를 입력하세요"
+                placeholder="10-1234-1234"
                 value={phone}
                 onChange={handlePhoneChange}
               />
@@ -100,9 +132,10 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="add-button">친구추가</button>
+          <button className="add-button" onClick={addNewFriend}>친구추가</button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
