@@ -6,6 +6,7 @@ import {useCookieManager} from "../../customHook/useCookieManager";
 
 const My = () => {
   const [userNickName, setUserNickName] = useState('');
+  const [userProfileUrl, setUserProfileUrl] = useState('');
   const {getCookies} = useCookieManager();
   const { accessToken, refreshToken } = getCookies();
 
@@ -29,7 +30,8 @@ const My = () => {
           })
           .then(data => {
             // 응답 데이터(data)를 처리
-            setUserNickName(data.resultData);
+            setUserNickName(data.resultData.name);
+            setUserProfileUrl(data.resultData.profileUrl);
             console.log(data);
           })
           .catch(error => {
@@ -48,9 +50,8 @@ const My = () => {
       <div className='navbar'>
         <span className='mynav'>내 정보</span>
       </div>
-
   <div className="my-profile">
-    <img src={Profile} alt="" />
+    <img src={!userProfileUrl? Profile : userProfileUrl} alt="" />
     <span>{userNickName}</span>
   </div>
   
