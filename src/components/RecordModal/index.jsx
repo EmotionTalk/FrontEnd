@@ -8,7 +8,6 @@ import PauseIcon from "../../assets/pause_icon.png";
 import ResetIcon from "../../assets/reset_icon.png";
 import SendIcon from "../../assets/send_white_icon.png";
 
-
 const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [isRecording,setIsRecording]=useState(false); // 녹음 중인지 여부
     const [isRecorded,setIsRecorded]=useState(false); // 녹음 완료 여부
@@ -106,6 +105,7 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
         setRecordedTime(0);
         setIsPlaying(false);
     }
+    
 
     // 녹음된 오디오 파일 전송 버튼
     const handleSendAudio=useCallback(()=>{

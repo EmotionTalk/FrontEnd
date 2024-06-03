@@ -5,12 +5,36 @@ import Mic from "../../assets/mic.svg";
 import Pic from "../../assets/pic.png";
 import X from "../../assets/x.svg";
 import RecordModal from '../RecordModal';
+import {toast} from "react-toastify";
 
 const Chat = ({ onClose }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const [isRecordModalOpen,setIsRecordModalOpen]=useState(false); // 녹음 모달창
+
+  // 서버로 오디오 파일을 전송하는 함수
+  const sendAudioFile = async (audioFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', audioFile);
+
+      const response = await fetch('http://localhost:8000/predict/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      toast.success('파일이 성공적으로 업로드되었습니다.');
+    } catch (error) {
+      toast.error('파일 업로드에 실패했습니다.');
+      console.error('Error:', error);
+    }
+  };
 
   // 녹음 모달창
   const handleRecordBtn=()=>{
@@ -101,7 +125,12 @@ const Chat = ({ onClose }) => {
             id="file"
             onChange={handleFileChange} // 파일 선택 시 실행될 함수 연결
           />
-          {isRecordModalOpen && <RecordModal closeRecordModal={closeRecordModal}/>}
+          {isRecordModalOpen && (
+            <RecordModal
+              closeRecordModal={closeRecordModal}
+              sendAudioFile={sendAudioFile}
+            />
+          )}
           <label htmlFor='file'>
             <img src={Pic} className='ip' alt="" />
           </label>
