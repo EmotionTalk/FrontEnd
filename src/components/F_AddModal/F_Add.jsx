@@ -48,7 +48,7 @@ const Modal = ({ isOpen, onClose }) => {
   };
 
   const handleAddFriendButton=()=>{
-    const fullPhoneNumber = `${countryCode}${phone}`;
+    const fullPhoneNumber = `${countryCode}${phone}`.replace('+', '');
     const accessToken = getCookies().accessToken;
 
     fetch('http://localhost:8080/friend/newFriend',{
