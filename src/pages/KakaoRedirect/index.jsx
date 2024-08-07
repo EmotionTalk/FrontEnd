@@ -7,7 +7,7 @@ export function KakaoRedirect() {
   const [isAuthenticated,setIsAuthenticated]=useState(false);
   const [errorMessage,setErrorMessage]=useState("");
   const navigate=useNavigate();
-  const {setCookies}=useCookieManager();
+  const { setCookies }=useCookieManager();
 
   const onLoginSuccess=()=>{
     setIsAuthenticated(true);
@@ -30,7 +30,7 @@ export function KakaoRedirect() {
       navigate("/");
     }
     else{
-      onLoginFailure("OAuth login failed. Misshing tokens.")
+      onLoginFailure("OAuth login failed. Missing tokens.")
       navigate("/first");
     }
   },[navigate,onLoginSuccess,onLoginFailure,setCookies])
