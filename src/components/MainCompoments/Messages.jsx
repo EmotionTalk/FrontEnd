@@ -20,16 +20,16 @@ const Messages = ({ messages }) => {
   const handleLastMessageClick = () => {
     setShowResultModal(true);
   };
-
+  console.log(messages);
   return (
     <div className='messages'>
       {messages.map((msg, index) => (
         <Message
           key={index}
           ref={index === messages.length - 1 ? lastMessageRef : null}
-          message={msg.message} 
+          message={msg.messageType === 'IMAGE' ? null : msg.message}
           sendTime={msg.sendTime}
-          image={msg.image}
+          image={msg.messageType === 'IMAGE' ? msg.filePath : null}
           onClick={index === messages.length - 1 ? handleLastMessageClick : null}
         />
       ))}

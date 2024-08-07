@@ -45,6 +45,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
             message: msg.message,
             sendTime: sendTime,
             senderId: msg.senderId,
+            filePath: msg.filePath,
             messageType: msg.messageType
           };
         });
@@ -63,6 +64,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
         stompClient.current.subscribe(`/sub/chatroom/${chatRoomId}`, (message) => {
           const newMessage = JSON.parse(message.body);
           const sendTimeString = newMessage.sendTime;
+          console.log(newMessage);
           newMessage.sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분'); // A는 오전/오후
           setMessages((prevMessages) => [...prevMessages, newMessage]);
         });
@@ -157,24 +159,47 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
       handleSendMessage();
     }
   };
-
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const localAccessToken = getCookies().accessToken;
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileContent = reader.result.split(',')[1]; 
-        
+      const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+      if (!validImageTypes.includes(file.type)) {
+        toast.error('아직 사진만 전송이 가능합니다');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+  
+      try {
+        // 파일 업로드
+        const uploadResponse = await fetch('http://localhost:8080/file/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localAccessToken}`
+          },
+          body: formData,
+        });
+  
+        if (!uploadResponse.ok) {
+          throw new Error('File upload failed');
+        }
+  
+        const result = await uploadResponse.json();
+        console.log(result);
+        const fileId = result.resultData;
+        console.log(fileId);
+  
+        // STOMP 메시지 전송
         const newMessage = {
           message: '이미지',
           sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
           messageType: 'IMAGE',
-          fileContent: fileContent, 
-          fileName: file.name,
+          fileId: fileId, // 파일 ID
           chatRoomId: chatRoomId
         };
-
+  
         stompClient.current.publish({
           destination: `/pub/file-message/${chatRoomId}`,
           headers: {
@@ -183,13 +208,16 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           },
           body: JSON.stringify(newMessage)
         });
-
+  
         console.log('File message sent:', newMessage);
         scrollToBottom();
-      };
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
+  
+  
 
   useEffect(() => {
     scrollToBottom();

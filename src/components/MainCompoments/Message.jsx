@@ -16,7 +16,11 @@ const Message = forwardRef(({ message, sendTime, image, onClick }, ref) => {
         <span>종설</span>
       </div>
       <div className="messageContent">
-        {image ? <img src={image} alt="sent" /> : <p>{message}</p>} {/* 이미지가 있는 경우 이미지를 표시하고, 없는 경우 텍스트를 표시 */}
+        {image ? (
+          <img src={image} alt="sent" className="messageImage" /> 
+        ) : (
+          <p>{message}</p>
+        )}
         <span className="messageTime">{sendTime}</span>
       </div>
     </div>
