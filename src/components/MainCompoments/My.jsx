@@ -7,7 +7,7 @@ import {useCookieManager} from "../../customHook/useCookieManager";
 const My = () => {
   const [userNickName, setUserNickName] = useState('');
   const [userProfileUrl, setUserProfileUrl] = useState('');
-  const {getCookies} = useCookieManager();
+  const {getCookies, removeCookies} = useCookieManager();
   const { accessToken, refreshToken } = getCookies();
 
   useEffect(() => {
@@ -34,7 +34,8 @@ const My = () => {
             setUserProfileUrl(data.resultData.profileUrl);
             console.log(data);
           })
-          .catch(error => {
+          .catch(e => {
+            removeCookies();
           });
     }
     

@@ -1,120 +1,3 @@
-// import React, { useState, useEffect, useRef } from 'react';
-// import "./style.css";
-// import Messages from "./Messages";
-// import Mic from "../../assets/mic.svg";
-// import Pic from "../../assets/pic.png";
-// import X from "../../assets/x.svg";
-// import RecordModal from '../RecordModal';
-
-// const Chat = ({ onClose }) => {
-//   const [message, setMessage] = useState("");
-//   const [messages, setMessages] = useState([]);
-//   const messagesEndRef = useRef(null);
-//   const [isRecordModalOpen,setIsRecordModalOpen]=useState(false); // 녹음 모달창
-
-//   // 녹음 모달창
-//   const handleRecordBtn=()=>{
-//     setIsRecordModalOpen(true);
-//   }
-
-//   const closeRecordModal=()=>{
-//     setIsRecordModalOpen(false);
-//   }
-
-//   const handleCloseClick = () => {
-//     if (onClose) {
-//       onClose();
-//     }
-//   };
-
-//   const handleMessageChange = (e) => {
-//     setMessage(e.target.value);
-//   };
-
-//   const handleSendMessage = () => {
-//     if (message.trim() !== "") {
-//       const newMessage = {
-//         text: message,
-//         time: new Date().toLocaleTimeString(),
-//       };
-//       setMessages([...messages, newMessage]);
-//       setMessage("");
-//       scrollToBottom(); // 메시지가 추가될 때마다 스크롤을 아래로 이동
-//     }
-//   };
-
-//   const handleKeyPress = (e) => {
-//     if (e.key === "Enter") {
-//       handleSendMessage();
-//     }
-//   };
-
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = (event) => {
-//         const imageUrl = event.target.result;
-//         const newMessage = {
-//           image: imageUrl, // 이미지 URL을 메시지에 추가
-//           time: new Date().toLocaleTimeString(),
-//         };
-//         setMessages([...messages, newMessage]);
-//         scrollToBottom(); // 메시지가 추가될 때마다 스크롤을 아래로 이동
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   const scrollToBottom = () => {
-//     if (messagesEndRef.current) {
-//       messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-//     }
-//   };
-
-//   return (
-//     <div className='chat'>
-//       <div className="chatInfo">
-//         <span>권건표</span>
-//         <img src={X} className='ix' onClick={handleCloseClick} />
-//         <div className="chatIcons"></div>
-//       </div>
-//       <Messages messages={messages} />
-//       <div ref={messagesEndRef} />
-//       <div className='input'>
-//         <input
-//           type="text"
-//           placeholder='메세지를 입력하세요.'
-//           value={message}
-//           onChange={handleMessageChange}
-//           onKeyPress={handleKeyPress}
-//         />
-//         <div className="send">
-//           <img src={Mic} className='im' onClick={handleRecordBtn}/>
-//           <input
-//             type="file"
-//             style={{ display: "none" }}
-//             id="file"
-//             onChange={handleFileChange} // 파일 선택 시 실행될 함수 연결
-//           />
-//           {isRecordModalOpen && <RecordModal closeRecordModal={closeRecordModal}/>}
-//           <label htmlFor='file'>
-//             <img src={Pic} className='ip' alt="" />
-//           </label>
-//           <button onClick={handleSendMessage} className='sb'>Send</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Chat;
-
-//임시
 import React, { useState, useEffect, useRef } from 'react';
 import "./style.css";
 import Messages from "./Messages";
@@ -122,14 +5,87 @@ import Mic from "../../assets/mic.svg";
 import Pic from "../../assets/pic.png";
 import X from "../../assets/x.svg";
 import RecordModal from '../RecordModal';
-import {toast} from "react-toastify";
+import { useCookieManager } from '../../customHook/useCookieManager';
+import { toast } from "react-toastify";
+import { Stomp } from "@stomp/stompjs";
+import moment from 'moment-timezone';
+import 'moment/locale/ko'; // 한국어 로케일 추가
 
-const Chat = ({ onClose, userName, messages, onSendMessage }) => {
+const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [chatRoomId, setChatRoomId] = useState(null);
   const messagesEndRef = useRef(null);
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
+  const stompClient = useRef(null);
+  const { getCookies } = useCookieManager();
 
-  // 서버로 오디오 파일을 전송하는 함수
+  useEffect(() => {
+    moment.locale('ko'); // 한국어 로케일 설정
+
+    const getChatRoom = async (friendId) => {
+      const localAccessToken = getCookies().accessToken;
+      try {
+        const response = await fetch(`http://localhost:8080/chatroom/getOrMakeChatRoom?friendId=${friendId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localAccessToken}`,
+          }
+        });
+        const data = await response.json();
+        setChatRoomId(data.resultData.chatRoomId);  
+        console.log('datas : ', data);
+
+        const formattedMessages = data.resultData.messages.map(msg => {
+          const sendTimeString = msg.sendTime;
+          const sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분'); // A는 오전/오후
+          
+          return {
+            message: msg.message,
+            sendTime: sendTime,
+            senderId: msg.senderId,
+            messageType: msg.messageType
+          };
+        });
+        setMessages(formattedMessages);
+      } catch (error) { 
+        console.error('There was a problem with your fetch operation:', error);
+      }
+    };
+
+    const connect = (chatRoomId) => {
+      const localAccessToken = getCookies().accessToken;
+      const socket = new WebSocket(`ws://localhost:8080/ws`);
+      stompClient.current = Stomp.over(socket);
+      stompClient.current.connect({ 'Authorization' : `Bearer ${localAccessToken}` }, () => {
+        console.log('Connected to WebSocket');
+        stompClient.current.subscribe(`/sub/chatroom/${chatRoomId}`, (message) => {
+          const newMessage = JSON.parse(message.body);
+          const sendTimeString = newMessage.sendTime;
+          newMessage.sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분'); // A는 오전/오후
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+      });
+    };
+
+    if (friendId) {
+      getChatRoom(friendId).then(() => {
+        if (chatRoomId) {
+          connect(chatRoomId);
+        }
+      });
+    }
+
+    return () => {
+      if (stompClient.current) {
+        stompClient.current.disconnect(() => {
+          console.log('Disconnected from WebSocket');
+        });
+      }
+    };
+  }, [friendId, chatRoomId]);
+
   const sendAudioFile = async (audioFile) => {
     try {
       const formData = new FormData();
@@ -144,39 +100,14 @@ const Chat = ({ onClose, userName, messages, onSendMessage }) => {
         throw new Error('Network response was not ok');
       }
 
-      // const data = await response.json();
-      toast.success('파일이 성공적으로 업로드되었습니다.');
+      toast.success('음성이 정상적으로 분석 중입니다...');
     } catch (error) {
-      toast.error('파일 업로드에 실패했습니다.');
+      toast.error('음성 분석 중 오류 발생');
       console.error('Error:', error);
     }
   };
 
-  // 서버로 오디오 파일을 전송하는 함수
-  const sendAudioFile = async (audioFile) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', audioFile);
-
-      const response = await fetch('http://localhost:8000/predict/', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      // const data = await response.json();
-      toast.success('파일이 성공적으로 업로드되었습니다.');
-    } catch (error) {
-      toast.error('파일 업로드에 실패했습니다.');
-      console.error('Error:', error);
-    }
-  };
-
-  // 녹음 모달창
-  const handleRecordBtn=()=>{
+  const handleRecordBtn = () => {
     setIsRecordModalOpen(true);
   };
 
@@ -195,13 +126,28 @@ const Chat = ({ onClose, userName, messages, onSendMessage }) => {
   };
 
   const handleSendMessage = () => {
+    const localAccessToken = getCookies().accessToken;  
     if (message.trim() !== "") {
       const newMessage = {
-        text: message,
-        time: new Date().toLocaleTimeString(),
+        message: message,
+        sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'), // LocalDateTime 형식으로 변경
+        messageType: "TEXT",
+        chatRoomId: chatRoomId // 추가된 chatRoomId
       };
-      onSendMessage(userName, newMessage); // 부모 컴포넌트에 메시지 전송
+
+      stompClient.current.publish({ 
+        destination: `/pub/message/${chatRoomId}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localAccessToken}` 
+        },
+        body: JSON.stringify(newMessage)
+      });
+
+      // 입력창 초기화
       setMessage("");
+
+      // 화면을 맨 아래로 스크롤
       scrollToBottom();
     }
   };
@@ -213,16 +159,32 @@ const Chat = ({ onClose, userName, messages, onSendMessage }) => {
   };
 
   const handleFileChange = (e) => {
+    const localAccessToken = getCookies().accessToken;
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageUrl = event.target.result;
+      reader.onload = () => {
+        const fileContent = reader.result.split(',')[1]; 
+        
         const newMessage = {
-          image: imageUrl,
-          time: new Date().toLocaleTimeString(),
+          message: '이미지',
+          sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
+          messageType: 'IMAGE',
+          fileContent: fileContent, 
+          fileName: file.name,
+          chatRoomId: chatRoomId
         };
-        onSendMessage(userName, newMessage); // 부모 컴포넌트에 이미지 메시지 전송
+
+        stompClient.current.publish({
+          destination: `/pub/file-message/${chatRoomId}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localAccessToken}`
+          },
+          body: JSON.stringify(newMessage)
+        });
+
+        console.log('File message sent:', newMessage);
         scrollToBottom();
       };
       reader.readAsDataURL(file);
