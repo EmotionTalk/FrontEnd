@@ -37,13 +37,12 @@ const List = ({ onUserChatClick }) => {
     }
   };
 
-  
   useEffect(() => {
     fetchFriends();
-  }, []); // 빈 배열을 의존성 배열로 설정하여 최초 마운트 시에만 실행
+  }, []);
 
-  const handleUserChatClick = async (userName, friendId) => {
-    onUserChatClick(userName, friendId); // 클릭 시 사용자 이름과 채팅방 ID를 전달
+  const handleUserChatClick = async (userName, friendId, friendProfileImageUrl) => {
+    onUserChatClick(userName, friendId, friendProfileImageUrl);
   };
 
   const openModal = () => {
@@ -55,7 +54,7 @@ const List = ({ onUserChatClick }) => {
   };
 
   const handleFriendAdded = () => {
-    fetchFriends(); // 친구 추가 후 목록을 업데이트
+    fetchFriends();
   };
 
   return (
@@ -67,7 +66,10 @@ const List = ({ onUserChatClick }) => {
       <Search />
       <div className='chats'>
         {friends.map(friend => (
-          <div key={friend.friendMemberId} className="users" onClick={() => handleUserChatClick(friend.nickname, friend.friendMemberId)}>
+          <div 
+            key={friend.friendMemberId} 
+            className="users" 
+            onClick={() => handleUserChatClick(friend.nickname, friend.friendMemberId, friend.friendProfileImageUrl)}>
             <img src={friend.friendProfileImageUrl || Profile} alt="Profile" />
             <div className="userChatInfo">
               <span>{friend.nickname}</span>
@@ -81,4 +83,3 @@ const List = ({ onUserChatClick }) => {
 };
 
 export default List;
-      

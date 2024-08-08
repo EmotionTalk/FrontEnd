@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import "./style.css";
-import Pro from "../../assets/pro.jpg";
+import DefaultProfile from "../../assets/pro.jpg";
 
-const Message = forwardRef(({ message, sendTime, image, sender, onClick }, ref) => {
+const Message = forwardRef(({ message, sendTime, image, sender, profileImage, userName, onClick }, ref) => {
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -12,8 +12,8 @@ const Message = forwardRef(({ message, sendTime, image, sender, onClick }, ref) 
   return (
     <div className={`message ${sender === 'me' ? 'owner' : ''}`} ref={ref} onClick={handleClick}>
       <div className="messageInfo">
-        <img src={Pro} alt="profile" /> {/* 프로필 이미지 표시 */}
-        <span>{sender === 'me' ? '나' : '상대방'}</span>
+        <img src={profileImage || DefaultProfile} alt="profile" />
+        <span>{userName}</span>
       </div>
       <div className="messageContent">
         {image ? (
