@@ -15,9 +15,11 @@ const Main = () => {
   const [showChat, setShowChat] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null); // 사용자 이름을 저장할 상태 변수
-  const [lastMessages, setLastMessages] = useState({}); // 사용자별 마지막으로 보낸 메시지를 저장할 상태 변수
-  const [friendId, setFriendId] = useState(null); // 채팅방 ID를 저장할 상태 변수
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserProfile, setSelectedUserProfile] = useState(null);
+  const [myProfile, setMyProfile] = useState(null);
+  const [lastMessages, setLastMessages] = useState({});
+  const [friendId, setFriendId] = useState(null);
 
   const { getCookies } = useCookieManager();
 
@@ -26,17 +28,34 @@ const Main = () => {
     if (!accessToken || !refreshToken) {
       setShowLoginModal(true);
     }
+
+    // Fetch my profile information
+    if (accessToken) {
+      fetch('http://localhost:8080/auth/user', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        setMyProfile(data.resultData.profileUrl);
+      })
+      .catch(error => console.error('Error fetching my profile:', error));
+    }
   }, [getCookies]);
 
   const handleCloseModal = () => {
     setShowLoginModal(false);
   };
 
-  const handleUserChatClick = (userName, friendId) => {
-    setSelectedUser(userName); // 클릭한 사용자 이름을 저장
+  const handleUserChatClick = (userName, friendId, friendProfileImageUrl) => {
+    setSelectedUser(userName);
+    setSelectedUserProfile(friendProfileImageUrl);
     setShowChat(true);
     setFirstClick(false);
-    setFriendId(friendId); // 클릭한 채팅방 ID를 저장
+    setFriendId(friendId);
   };
 
   const handleChatView = () => {
@@ -72,9 +91,11 @@ const Main = () => {
               {!firstClick && showChat && (
                 <Chat
                   userName={selectedUser}
+                  userProfile={selectedUserProfile}
+                  myProfile={myProfile}
                   onClose={handleChatClose}
-                  friendId={friendId} // 채팅방 ID 전달
-                  setLastMessages={setLastMessages} // 마지막 메시지 설정 함수 전달
+                  friendId={friendId}
+                  setLastMessages={setLastMessages}
                 />
               )}
             </>
@@ -87,9 +108,11 @@ const Main = () => {
               {showChat && (
                 <Chat 
                   userName={selectedUser}
+                  userProfile={selectedUserProfile}
+                  myProfile={myProfile}
                   onClose={handleChatClose}
-                  friendId={friendId} // 채팅방 ID 전달
-                  setLastMessages={setLastMessages} // 마지막 메시지 설정 함수 전달
+                  friendId={friendId}
+                  setLastMessages={setLastMessages}
                 />
               )}
             </>
@@ -102,9 +125,11 @@ const Main = () => {
               {showChat && (
                 <Chat 
                   userName={selectedUser}
+                  userProfile={selectedUserProfile}
+                  myProfile={myProfile}
                   onClose={handleChatClose}
-                  friendId={friendId} // 채팅방 ID 전달
-                  setLastMessages={setLastMessages} // 마지막 메시지 설정 함수 전달
+                  friendId={friendId}
+                  setLastMessages={setLastMessages}
                 />
               )}
             </>

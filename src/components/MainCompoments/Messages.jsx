@@ -3,7 +3,7 @@ import Message from "./Message";
 import ResultModal from "../RecordResultModal/ResultModal";
 import "./style.css";
 
-const Messages = ({ messages }) => {
+const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   const lastMessageRef = useRef(null);
   const [showResultModal, setShowResultModal] = useState(false);
 
@@ -20,7 +20,7 @@ const Messages = ({ messages }) => {
   const handleLastMessageClick = () => {
     setShowResultModal(true);
   };
-  console.log(messages);
+
   return (
     <div className='messages'>
       {messages.map((msg, index) => (
@@ -30,6 +30,9 @@ const Messages = ({ messages }) => {
           message={msg.messageType === 'IMAGE' ? null : msg.message}
           sendTime={msg.sendTime}
           image={msg.messageType === 'IMAGE' ? msg.filePath : null}
+          sender={msg.senderId === userId ? 'me' : 'other'}
+          profileImage={msg.senderId === userId ? myProfile : userProfile}
+          userName={msg.senderId === userId ? '나' : userName}
           onClick={index === messages.length - 1 ? handleLastMessageClick : null}
         />
       ))}
