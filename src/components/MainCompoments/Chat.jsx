@@ -15,6 +15,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [chatRoomId, setChatRoomId] = useState(null);
+  const [userId, setUserId] = useState(null); // userId 상태 추가
   const messagesEndRef = useRef(null);
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
   const stompClient = useRef(null);
@@ -34,13 +35,14 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           }
         });
         const data = await response.json();
-        setChatRoomId(data.resultData.chatRoomId);  
+        setChatRoomId(data.resultData.chatRoomId);
+        setUserId(data.resultData.userId); // userId 설정
         console.log('datas : ', data);
 
         const formattedMessages = data.resultData.messages.map(msg => {
           const sendTimeString = msg.sendTime;
           const sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분'); // A는 오전/오후
-          
+
           return {
             message: msg.message,
             sendTime: sendTime,
@@ -50,7 +52,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           };
         });
         setMessages(formattedMessages);
-      } catch (error) { 
+      } catch (error) {
         console.error('There was a problem with your fetch operation:', error);
       }
     };
@@ -128,7 +130,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
   };
 
   const handleSendMessage = () => {
-    const localAccessToken = getCookies().accessToken;  
+    const localAccessToken = getCookies().accessToken;
     if (message.trim() !== "") {
       const newMessage = {
         message: message,
@@ -137,11 +139,11 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
         chatRoomId: chatRoomId // 추가된 chatRoomId
       };
 
-      stompClient.current.publish({ 
+      stompClient.current.publish({
         destination: `/pub/message/${chatRoomId}`,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localAccessToken}` 
+          'Authorization': `Bearer ${localAccessToken}`
         },
         body: JSON.stringify(newMessage)
       });
@@ -159,6 +161,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
       handleSendMessage();
     }
   };
+
   const handleFileChange = async (e) => {
     const localAccessToken = getCookies().accessToken;
     const file = e.target.files[0];
@@ -168,10 +171,10 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
         toast.error('아직 사진만 전송이 가능합니다');
         return;
       }
-      
+
       const formData = new FormData();
       formData.append('file', file);
-  
+
       try {
         // 파일 업로드
         const uploadResponse = await fetch('http://localhost:8080/file/upload', {
@@ -181,16 +184,16 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           },
           body: formData,
         });
-  
+
         if (!uploadResponse.ok) {
           throw new Error('File upload failed');
         }
-  
+
         const result = await uploadResponse.json();
         console.log(result);
         const fileId = result.resultData;
         console.log(fileId);
-  
+
         // STOMP 메시지 전송
         const newMessage = {
           message: '이미지',
@@ -199,7 +202,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           fileId: fileId, // 파일 ID
           chatRoomId: chatRoomId
         };
-  
+
         stompClient.current.publish({
           destination: `/pub/file-message/${chatRoomId}`,
           headers: {
@@ -208,7 +211,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
           },
           body: JSON.stringify(newMessage)
         });
-  
+
         console.log('File message sent:', newMessage);
         scrollToBottom();
       } catch (error) {
@@ -216,8 +219,6 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
       }
     }
   };
-  
-  
 
   useEffect(() => {
     scrollToBottom();
@@ -236,7 +237,7 @@ const Chat = ({ onClose, userName, friendId, setLastMessages }) => {
         <img src={X} className='ix' onClick={handleCloseClick} />
         <div className="chatIcons"></div>
       </div>
-      <Messages messages={messages} />
+      <Messages messages={messages} userId={userId} /> {/* userId 전달 */}
       <div ref={messagesEndRef} />
       <div className='input'>
         <input
