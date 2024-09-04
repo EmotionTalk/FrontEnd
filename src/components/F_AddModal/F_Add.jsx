@@ -42,7 +42,12 @@ const Modal = ({ isOpen, onClose, onFriendAdded }) => {
   };
 
   const handleAddFriendButton = async () => {
-    const fullPhoneNumber = `${countryCode}${phone}`.replace('+', '');
+    let sanitizedPhone = phone;
+    let result;
+    if (sanitizedPhone.startsWith('0')) {
+        sanitizedPhone = sanitizedPhone.substring(1);
+    }
+    const fullPhoneNumber = `${countryCode}${sanitizedPhone}`.replace('+', '');
     const accessToken = getCookies().accessToken;
 
     try {
@@ -54,16 +59,16 @@ const Modal = ({ isOpen, onClose, onFriendAdded }) => {
         },
         body: JSON.stringify({ name, fullPhoneNumber })
       });
-
+      result = await response.json();
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
-      toast.success("친구가 성공적으로 추가되었습니다.");
+      
+      toast.success(result.resultMsg);
       onClose();
       onFriendAdded(); // 친구 추가 후 부모 컴포넌트에게 알림
     } catch (error) {
-      toast.error("친구 추가에 실패했습니다.", {
+      toast.error(result.resultMsg, {
         position: "top-center"
       });
     }
@@ -78,7 +83,7 @@ const Modal = ({ isOpen, onClose, onFriendAdded }) => {
       <div className="modal">
         <div className="modal-header">
           <span>친구추가</span>
-          <img src={X} className='f-x' onClick={onClose} />
+          <img src={X} className='f-x' onClick={onClose} alt='X'/>
         </div>
         <div className="modal-body">
           <div className="input-group">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Search from './Search';
 import Profile from "../../assets/pro.jpg";
 import Modal from '../F_AddModal/F_Add';
@@ -6,12 +6,12 @@ import "./style.css";
 import FA from "../../assets/친구추가.svg";
 import { useCookieManager } from '../../customHook/useCookieManager';
 
-const List = ({ onUserChatClick }) => {
+const List = ({ onUserChatClick, onContextMenu }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [friends, setFriends] = useState([]);
 
   const { getCookies } = useCookieManager();
-  
+
   const fetchFriends = async () => {
     const localAccessToken = getCookies().accessToken;
     if (localAccessToken) {
@@ -29,7 +29,6 @@ const List = ({ onUserChatClick }) => {
         }
 
         const data = await response.json();
-        console.log(data.resultData);
         setFriends(data.resultData);
       } catch (error) {
         console.error('There was a problem with your fetch operation:', error);
@@ -40,10 +39,6 @@ const List = ({ onUserChatClick }) => {
   useEffect(() => {
     fetchFriends();
   }, []);
-
-  const handleUserChatClick = async (userName, friendId, friendProfileImageUrl) => {
-    onUserChatClick(userName, friendId, friendProfileImageUrl);
-  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -58,21 +53,27 @@ const List = ({ onUserChatClick }) => {
   };
 
   return (
-    <div className='list'>
+    <div className='list' style={{ position: 'relative' }}>
       <div className='navbar'>
         <span className='f-list'>친구 목록</span>
         <img src={FA} className='f-a' onClick={openModal} alt="친구추가" />
       </div>
       <Search />
       <div className='chats'>
-        {friends.map(friend => (
-          <div 
-            key={friend.friendMemberId} 
-            className="users" 
-            onClick={() => handleUserChatClick(friend.nickname, friend.friendMemberId, friend.friendProfileImageUrl)}>
-            <img src={friend.friendProfileImageUrl || Profile} alt="Profile" />
-            <div className="userChatInfo">
-              <span>{friend.nickname}</span>
+        {friends.map((friend, index) => (
+          <div
+            key={friend.friendMemberId}
+            className="users-wrapper"
+            onContextMenu={(event) => onContextMenu(event, friend)}  // 우클릭 시 이벤트 호출
+          >
+            <div
+              className="users"
+              onClick={() => onUserChatClick(friend.nickname, friend.friendMemberId, friend.friendProfileImageUrl)}
+            >
+              <img className="userProfileImg" src={friend.friendProfileImageUrl || Profile} alt="Profile" />
+              <div className="userChatInfo">
+                <span>{friend.nickname}</span>
+              </div>
             </div>
           </div>
         ))}
