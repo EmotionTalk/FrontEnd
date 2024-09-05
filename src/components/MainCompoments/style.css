@@ -1,6 +1,4 @@
-   /* 기존 스타일들 */
    .sidebar{
-    
     border-right: 1px solid #ECECEC;
     background-color: #1B83FC;
     display: flex;
@@ -92,6 +90,7 @@
     border-right: 1px solid #ECECEC;
     background-color: #fff;
     position: relative;
+    width: 23%;
 }
 .list .navbar{
     display: flex;
@@ -162,12 +161,17 @@
     flex-direction: column;
     color: gray;
     font-weight: 300;
+    margin: auto 0;
 }
 .message .messageInfo img{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+}
+.message .messageInfo span{
+    margin: 0 auto;
+    margin-top: 10px;
 }
 .message .messageContent{
     max-width: 50%;
@@ -244,18 +248,22 @@
 ::placeholder{
     color: lightgray;
 }
-.users{
-    padding: 10px;
+.users {
     display: flex;
     align-items: center;
-    gap: 10px;
     cursor: pointer;  
-}
-.users img{
+    position: relative;
+    transition: transform 0.3s ease; /* 애니메이션 추가 */
+  }
+  .users.swiped {
+    transform: translateX(-70px); /* 왼쪽으로 이동 */
+  }
+.users .userProfileImg{
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    margin: 10px;
 }
 .users:hover{
     background-color:rgb(235, 235, 235);
@@ -377,4 +385,24 @@
     outline: none;
     font-size: 20px;
     transition: width 1s, padding 0.5s, border 0.5s, font-size 0.5s;
+}
+.context-menu {
+    border-radius: 4px;
+    position: absolute;
+}
+  
+.context-menu button {
+display: block;
+width: 100%;
+background-color: #f8f8f8;
+border: none;
+color: #333;
+text-align: left;
+padding: 8px;
+margin: 5px 0;
+cursor: pointer;
+}
+
+.context-menu button:hover {
+background-color: #ddd;
 }
