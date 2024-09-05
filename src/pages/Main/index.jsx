@@ -8,6 +8,7 @@ import List from "../../components/MainCompoments/List";
 import Start from "../../components/MainCompoments/Start";
 import ChatList from "../../components/MainCompoments/ChatList";
 import ChatStart from "../../components/MainCompoments/ChatStart";
+import ContextMenu from "../../components/MainCompoments/ContextMenu";  // 새로 생성한 ContextMenu 컴포넌트 가져오기
 import "./style.css";
 
 const Main = () => {
@@ -20,6 +21,7 @@ const Main = () => {
   const [myProfile, setMyProfile] = useState(null);
   const [lastMessages, setLastMessages] = useState({});
   const [friendId, setFriendId] = useState(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const { getCookies } = useCookieManager();
 
@@ -56,6 +58,7 @@ const Main = () => {
     setShowChat(true);
     setFirstClick(false);
     setFriendId(friendId);
+    setContextMenuPosition(null);  // ContextMenu 닫기
   };
 
   const handleChatView = () => {
@@ -73,6 +76,34 @@ const Main = () => {
   const handleChatClose = () => {
     setShowChat(false);
     setFirstClick(true);
+  };
+
+  const handleContextMenu = (event, friend) => {
+    event.preventDefault();  // 기본 우클릭 메뉴 비활성화
+  
+    // 우클릭 이벤트가 아닐 경우 리턴
+    if (event.type !== "contextmenu") {
+      return;
+    }
+  
+    setSelectedUser(friend.nickname);
+    setSelectedUserProfile(friend.friendProfileImageUrl);
+    setFriendId(friend.friendMemberId);
+  
+    // 마우스 위치에 맞춰 컨텍스트 메뉴 위치 설정
+    setContextMenuPosition({
+      x: event.clientX,
+      y: event.clientY
+    });
+  };
+
+  const handleDeleteFriend = () => {
+    setLastMessages(prevMessages => {
+      const updatedMessages = { ...prevMessages };
+      delete updatedMessages[friendId];
+      return updatedMessages;
+    });
+    // TODO: 서버와 연동하여 친구 삭제
   };
 
   return (
@@ -103,7 +134,7 @@ const Main = () => {
           {view === 'my' && (
             <>
               <My />
-              <List onUserChatClick={handleUserChatClick} />
+              <List onUserChatClick={handleUserChatClick} onContextMenu={handleContextMenu} />
               {!showChat && <Start />}
               {showChat && (
                 <Chat 
@@ -120,7 +151,7 @@ const Main = () => {
           {view === 'default' && (
             <>
               <My />
-              <List onUserChatClick={handleUserChatClick} />
+              <List onUserChatClick={handleUserChatClick} onContextMenu={handleContextMenu} />
               {!showChat && <Start />}
               {showChat && (
                 <Chat 
@@ -136,6 +167,12 @@ const Main = () => {
           )}
         </div>
       )}
+      <ContextMenu 
+        position={contextMenuPosition} 
+        onClose={() => setContextMenuPosition(null)} 
+        onOpenChat={() => handleUserChatClick(selectedUser, friendId, selectedUserProfile)}
+        onDeleteFriend={handleDeleteFriend}
+      />
     </div>
   );
 };
