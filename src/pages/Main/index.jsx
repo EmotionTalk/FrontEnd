@@ -80,11 +80,17 @@ const Main = () => {
 
   const handleContextMenu = (event, friend) => {
     event.preventDefault();  // 기본 우클릭 메뉴 비활성화
-
+  
+    // 우클릭 이벤트가 아닐 경우 리턴
+    if (event.type !== "contextmenu") {
+      return;
+    }
+  
     setSelectedUser(friend.nickname);
     setSelectedUserProfile(friend.friendProfileImageUrl);
     setFriendId(friend.friendMemberId);
-
+  
+    // 마우스 위치에 맞춰 컨텍스트 메뉴 위치 설정
     setContextMenuPosition({
       x: event.clientX,
       y: event.clientY
