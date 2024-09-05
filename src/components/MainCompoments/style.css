@@ -362,3 +362,19 @@
     font-family: "Cafe24Ssurround";
     color: #1B83FC;
 }
+.searchForm input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    font-size: 16px; 
+    transition: width 1s, padding 0.5s, border 0.5s, font-size 0.5s; 
+}
+
+.searchForm input[type="text"]:focus {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    transition: width 1s, padding 0.5s, border 0.5s, font-size 0.5s;
+}

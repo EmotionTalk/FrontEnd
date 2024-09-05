@@ -8,6 +8,7 @@ import PauseIcon from "../../assets/pause_icon.png";
 import ResetIcon from "../../assets/reset_icon.png";
 import SendIcon from "../../assets/send_white_icon.png";
 import {toast} from "react-toastify";
+import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 
 const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [isRecording,setIsRecording]=useState(false); // 녹음 중인지 여부
@@ -17,6 +18,7 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [audioUrl,setAudioUrl]=useState(null); // 녹음된 오디오 파일 URL
     const [recordedTime, setRecordedTime]=useState(0); // 녹음된 시간
     const audioRef=useRef(null); // 오디오 요소 참조
+    const {transcript, resetTranscript}=useSpeechRecognition(); // 음성인식 결과 저장
 
     useEffect(()=>{
         // 녹음 중 시간 기록 타이머
@@ -57,9 +59,12 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                 stream.getAudioTracks().forEach((track)=>track.stop());
                 setIsRecorded(true);
                 setIsRecording(false);
+                SpeechRecognition.stopListening(); // 음성인식 중지
             }
 
             setIsRecording(true);
+            resetTranscript(); // 이전 음성 인식 결과 초기화
+            SpeechRecognition.startListening({continuous:true}); // 음성인식 시작
         })
     }
 
@@ -105,6 +110,7 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
         setAudioUrl(null);
         setRecordedTime(0);
         setIsPlaying(false);
+        resetTranscript(); // 음성인식 결과 초기화
     }
     
 
@@ -121,6 +127,9 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         lastModified:new Date(),
                     });
                     return sendAudioFile(audioFile); // 서버로 전송
+                })
+                .then(()=>{
+                    return sentToGPT(transcript);
                 })
                 .then(() => {
                     toast.success("오디오 파일이 성공적으로 전송되었습니다.");
@@ -159,6 +168,12 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         <span>{isRecording ? "녹음 중..." : "00:00"}</span>
                     )}
                 </div>
+                {/* 실시간 음성인식 텍스트 표시 */}
+                {isRecording && (
+                    <div className="Transcript">
+                        <p>{transcript}</p>
+                    </div>
+                )}
                 <div className="ButtonBox">
                     {/* 취소 */}
                     <button className="CancelButton" onClick={closeRecordModal}>취소</button>
