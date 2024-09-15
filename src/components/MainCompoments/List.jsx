@@ -7,7 +7,6 @@ import FA from "../../assets/친구추가.svg";
 
 const List = ({ friendsList, onUserChatClick, onContextMenu }) => { // 기본값을 빈 배열로 설정
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(friendsList)
   const openModal = () => {
     setIsModalOpen(true);
   };

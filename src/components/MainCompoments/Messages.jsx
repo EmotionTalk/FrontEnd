@@ -1,47 +1,3 @@
-// import React, { useEffect, useRef, useState } from 'react';
-// import Message from "./Message";
-// import ResultModal from "../RecordResultModal/ResultModal";
-// import "./style.css";
-
-// const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
-//   const lastMessageRef = useRef(null);
-//   const [showResultModal, setShowResultModal] = useState(false);
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   const scrollToBottom = () => {
-//     if (lastMessageRef.current) {
-//       lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-//     }
-//   };
-
-//   const handleLastMessageClick = () => {
-//     setShowResultModal(true);
-//   };
-
-//   return (
-//     <div className='messages'>
-//       {messages.map((msg, index) => (
-//         <Message
-//           key={index}
-//           ref={index === messages.length - 1 ? lastMessageRef : null}
-//           message={msg.messageType === 'IMAGE' ? null : msg.message}
-//           sendTime={msg.sendTime}
-//           image={msg.messageType === 'IMAGE' ? msg.filePath : null}
-//           sender={msg.senderId === userId ? 'me' : 'other'}
-//           profileImage={msg.senderId === userId ? myProfile : userProfile}
-//           userName={msg.senderId === userId ? '나' : userName}
-//           onClick={index === messages.length - 1 ? handleLastMessageClick : null}
-//         />
-//       ))}
-//       <ResultModal show={showResultModal} onClose={() => setShowResultModal(false)} />
-//     </div>
-//   );
-// };
-
-// export default Messages;
 import React, { useEffect, useRef, useState } from 'react';
 import Message from "./Message";
 import ResultModal from "../RecordResultModal/ResultModal";
@@ -57,11 +13,11 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   // 감정 번호 매핑
   const emotionMapping = {
     화남: 0,
-    슬픔: 1,
-    싫어함: 2,
-    평범함: 3,
-    행복함: 4,
-    두려움: 5
+    두려움: 1,
+    슬픔: 2,
+    싫어함: 3,
+    평범함: 4,
+    행복함: 5
   };
 
   useEffect(() => {

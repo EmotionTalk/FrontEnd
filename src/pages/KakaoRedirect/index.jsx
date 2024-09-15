@@ -32,6 +32,7 @@ export function KakaoRedirect() {
     else{
       onLoginFailure("OAuth login failed. Missing tokens.")
       navigate("/first");
+      console.log(errorMessage)
     }
   },[navigate,onLoginSuccess,onLoginFailure,setCookies])
 

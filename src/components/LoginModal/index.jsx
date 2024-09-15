@@ -1,14 +1,13 @@
 import React from "react";
 import Logo from "../../assets/et_logo.png";
 import KakaoLogo from "../../assets/kakao_logo.png"
-import KakaoLoginBtn from "../../assets/kakao_login_medium_wide.png"
 import "./style.css";
 
-const KAKAO_REST_API_KEY=process.env.REACT_APP_KAKAO_REST_API_KEY;
-const KAKAO_REDIRECT_URI=process.env.REACT_APP_REDIRECT_URL;
-const kakaoURL=`http://localhost:8080/oauth2/authorization/kakao`
 
 function LoginModal({closeModal}){
+
+const kakaoURL=`${process.env.REACT_APP_SERVER_URL}/oauth2/authorization/kakao`
+
     const handleKakaoLogin=()=>{
         window.location.href=kakaoURL
     }
@@ -35,4 +34,4 @@ function LoginModal({closeModal}){
         </div>
     )
 }
-export default LoginModal
+export default LoginModal;

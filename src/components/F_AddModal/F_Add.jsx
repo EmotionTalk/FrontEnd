@@ -51,7 +51,7 @@ const Modal = ({ isOpen, onClose, onFriendAdded }) => {
     const accessToken = getCookies().accessToken;
 
     try {
-      const response = await fetch('http://localhost:8080/friend/newFriend', {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/friend/newFriend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
