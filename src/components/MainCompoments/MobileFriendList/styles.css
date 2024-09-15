@@ -1,0 +1,147 @@
+/* 모바일 컨테이너 */
+.mobile-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    height: 100%;
+    width: 100%;
+}
+  
+/* 상단 헤더 */
+.mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    border-bottom: 1px solid #ececec;
+}
+
+.search-icon {
+    margin-right: 10px;
+}
+
+.icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+/* 검색창 애니메이션 */
+.search-bar-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.search-bar-wrapper.open {
+    max-height: 100px; /* 애니메이션이 끝났을 때의 최대 높이 */
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ececec;
+    position: relative; /* 입력창 내부에 아이콘 배치 */
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    padding-right: 30px; /* 아이콘 공간 확보 */
+}
+
+/* 입력 내용 지우기 (X자 아이콘) */
+.clear-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: absolute;
+    right: 17px; /* 입력창 내부에서 오른쪽에 배치 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    background-color: black;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0); /* 처음에는 아이콘이 작게 설정 */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* 애니메이션 추가 */
+}
+
+.clear-icon.show {
+    opacity: 1;
+    transform: scale(1); /* 입력이 있을 때 아이콘이 커짐 */
+}
+
+/* 내 프로필 섹션 */
+.mobile-profile {
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+    background-color: white;
+    border-bottom: 1px solid #ececec;
+}
+
+.profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 친구 목록 라벨 */
+.friend-label {
+    font-size: 16px;
+    color: #888;
+    padding: 10px;
+    background-color: white;
+    border-bottom: 1px solid #ececec;
+}
+
+/* 친구 목록 */
+.friends-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+    border-bottom: 1px solid #ececec;
+    cursor: pointer;
+}
+
+.friend-item:hover {
+    background-color: #f1f1f1;
+}
+
+.friend-profile-image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.friend-name {
+    font-size: 16px;
+    color: #333;
+}
+
+.no-friends {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
