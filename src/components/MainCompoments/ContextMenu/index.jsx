@@ -1,5 +1,5 @@
 import React from 'react';
-import './ContextMenu.css';
+import './styles.css';
 
 const ContextMenu = ({ position, onClose, onOpenChat, onDeleteFriend }) => {
   if (!position) return null;
@@ -28,6 +28,11 @@ const ContextMenu = ({ position, onClose, onOpenChat, onDeleteFriend }) => {
       >
         친구 삭제
       </button>
+      <button
+      onClick={() =>{
+        onClose()
+      }}
+      >취소</button>
     </div>
   );
 };

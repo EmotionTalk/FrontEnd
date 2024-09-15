@@ -4,21 +4,41 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100px;
 
     .logo-img {
         width: 50px; /* 원하는 크기로 설정 */
         height: auto; /* 비율을 유지하고 싶다면 auto로 설정 */
+        margin: 18px 0;
+        padding: 0px;
     }
 }
-.sidebar img{
+
+.sidebar-icon{
     width: 30px;
     height: 30px;
-    margin-bottom: 15px;
-    margin-top: 15px;
+    padding: 15px 35px;
     cursor: pointer;
 }
-.sidebar img:hover {
+
+/* 선택된 아이콘에 대한 스타일 */
+.sidebar-icon.active path {
+    fill: #1B83FC;
+  }
+  
+/* 선택된 아이콘에 대한 스타일 */
+.sidebar-icon.active circle {
+    fill: #1B83FC;
+  }
+  
+.sidebar-icon.active{
+    background-color: white;
+}
+  /* 기본 상태 아이콘 스타일 */
+  .sidebar-icon path {
+    fill: white;
+  }
+  
+.sidebar-icon:hover {
     background-color: #61abff;
   }
 .my {
@@ -28,6 +48,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
 }
 .my .navbar{
     display: flex;
@@ -180,11 +201,11 @@
     gap: 0px;
 }
 .message .messageContent p{
-    background-color: rgb(172, 193, 255);
+    background-color: rgb(226 225 225);
     padding: 10px 10px;
     border-radius: 0px 10px 10px 10px;
     max-width: max-content;
-    color: #ffffff;
+    color: black;
 }
 .message .messageContent img{
     width: 100px;

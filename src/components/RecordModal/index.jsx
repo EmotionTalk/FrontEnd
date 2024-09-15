@@ -128,9 +128,6 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                     });
                     return sendAudioFile(audioFile); // 서버로 전송
                 })
-                .then(()=>{
-                    return sentToGPT(transcript);
-                })
                 .then(() => {
                     toast.success("오디오 파일이 성공적으로 전송되었습니다.");
                     closeRecordModal();

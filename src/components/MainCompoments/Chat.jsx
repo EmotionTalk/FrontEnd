@@ -136,7 +136,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
         message: message,
         sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
         messageType: "TEXT",
-        chatRoomId: chatRoomId
+        chatRoomId: chatRoomId,
       };
 
       stompClient.current.publish({
