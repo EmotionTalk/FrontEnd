@@ -61,7 +61,7 @@ const Main = () => {
     console.log('FriendsList State:', friendsList); // 친구 목록이 업데이트될 때마다 콘솔 출력
     const { accessToken, refreshToken } = getCookies();
     if (!accessToken || !refreshToken) {
-      setShowLoginModal(false);
+      setShowLoginModal(true);
       return;
     }
     
