@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Profile from "../../../assets/profile.png";
 import AddFriendIcon from "../../../assets/친구추가.svg"; // 친구 추가 아이콘
 import SearchIcon from '../../../assets/search_icon.svg';
@@ -10,7 +10,9 @@ const MobileFriendList = ({ userNickName, userProfileUrl, onUserChatClick, frien
   const [isSearchOpen, setIsSearchOpen] = useState(false); // 검색창 상태
   const [searchText, setSearchText] = useState(""); // 검색창 입력 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(friendsList)
+  
+  const inputRef = useRef(null); // input 요소 참조
+  
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -21,7 +23,15 @@ const MobileFriendList = ({ userNickName, userProfileUrl, onUserChatClick, frien
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen); // 검색창 열기/닫기 토글
+    setSearchText("");
   };
+
+  // 검색창이 열릴 때 input에 포커스를 설정
+  useEffect(() => {
+    if (isSearchOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isSearchOpen]);
 
   const clearSearch = () => {
     setSearchText(""); // 검색창 입력 내용 지우기
@@ -52,6 +62,7 @@ const MobileFriendList = ({ userNickName, userProfileUrl, onUserChatClick, frien
       <div className={`search-bar-wrapper ${isSearchOpen ? 'open' : ''}`}>
         <div className="search-bar">
           <input
+            ref={inputRef} // input 요소에 ref 추가
             type="text"
             placeholder="검색"
             className="search-input"

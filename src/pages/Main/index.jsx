@@ -35,7 +35,7 @@ const Main = () => {
     const localAccessToken = getCookies().accessToken;
     if (localAccessToken) {
       try {
-        const response = await fetch('http://localhost:8080/friend/getFriends', {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/friend/getFriends`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const Main = () => {
     
     // 내 프로필 정보 가져오기
     if (accessToken) {
-      fetch('http://localhost:8080/auth/user', {
+      fetch(`${process.env.REACT_APP_SERVER_URL}/auth/user`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -222,6 +222,8 @@ const Main = () => {
           ) : (
             // 850 미만일 때 MobileFriendList 컴포넌트 렌더링
             <>
+            {view === 'default' &&(
+              <>
             {!showChat && (
               <MobileFriendList
               userNickName={myNickName} 
@@ -241,6 +243,51 @@ const Main = () => {
               />
           )}
           </>
+            )}
+            {view === 'my' &&(
+              <>
+            {!showChat && (
+              <MobileFriendList
+              userNickName={myNickName} 
+              userProfileUrl={myProfile} 
+              friendsList={friendsList} 
+              onContextMenu={handleContextMenu} 
+              onUserChatClick={handleUserChatClick}
+              />
+            )}
+            {showChat && (
+              <Chat 
+                userName={selectedUser}
+                userProfile={selectedUserProfile}
+                myProfile={myProfile}
+                onClose={handleChatClose}
+                friendId={friendId}
+                setLastMessages={setLastMessages}
+              />
+          )}
+          </>
+            )}
+            {view === 'chat' &&(
+              <>
+                { !showChat && (
+                  <ChatList 
+                    onUserChatClick={handleUserChatClick} 
+                    lastMessages={lastMessages} 
+                  />
+                  )}
+                  { showChat && (
+                    <Chat
+                      userName={selectedUser}
+                      userProfile={selectedUserProfile}
+                      myProfile={myProfile}
+                      onClose={handleChatClose}
+                      friendId={friendId}
+                      setLastMessages={setLastMessages}
+                    />
+                  )}
+              </>
+            )}
+            </>
           )}
         </div>
       )}

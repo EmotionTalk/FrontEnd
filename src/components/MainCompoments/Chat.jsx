@@ -27,7 +27,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
     const getChatRoom = async (friendId) => {
       const localAccessToken = getCookies().accessToken;
       try {
-        const response = await fetch(`http://localhost:8080/chatroom/getOrMakeChatRoom?friendId=${friendId}`, {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/chatroom/getOrMakeChatRoom?friendId=${friendId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
 
     const connect = (chatRoomId) => {
       const localAccessToken = getCookies().accessToken;
-      const socket = new WebSocket(`ws://localhost:8080/ws`);
+      const socket = new WebSocket(`ws://${process.env.REACT_APP_IP}:8080/ws`);
       stompClient.current = Stomp.over(socket);
       stompClient.current.connect({ 'Authorization' : `Bearer ${localAccessToken}` }, () => {
         console.log('Connected to WebSocket');
@@ -103,7 +103,8 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+      let result = await response.json();
+      console.log(result);
       toast.success('음성이 정상적으로 분석 중입니다...');
     } catch (error) {
       toast.error('음성 분석 중 오류 발생');

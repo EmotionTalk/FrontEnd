@@ -15,10 +15,16 @@
     padding: 10px;
     background-color: white;
     border-bottom: 1px solid #ececec;
+    font-weight: bold;
 }
 
 .search-icon {
     margin-right: 10px;
+    border-radius: 50%;
+
+}
+.search-icon:hover {
+    background-color: rgb(242, 242, 242);
 }
 
 .icon {
@@ -31,7 +37,7 @@
 .search-bar-wrapper {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.2s ease-out;
 }
 
 .search-bar-wrapper.open {
