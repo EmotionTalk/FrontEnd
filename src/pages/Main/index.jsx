@@ -251,6 +251,7 @@ const Main = () => {
               userNickName={myNickName} 
               userProfileUrl={myProfile} 
               friendsList={friendsList} 
+              onContextMenu={handleContextMenu} 
               onUserChatClick={handleUserChatClick}
               />
             )}
