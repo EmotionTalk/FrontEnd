@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Message from "./Message";
 import ResultModal from "../RecordResultModal/ResultModal";
 import "./style.css";
+import { useCookieManager } from '../../customHook/useCookieManager';
 
 const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   const lastMessageRef = useRef(null);
@@ -9,7 +10,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   const [emotion, setEmotion] = useState(''); // 감정 상태 저장
   const [clickedMessage, setClickedMessage] = useState(''); // 클릭된 메시지 저장
   const [aiSuggestion, setAiSuggestion] = useState(''); // AI의 답변 예시 저장
-
+  const { getCookies } = useCookieManager();
   // 감정 번호 매핑
   const emotionMapping = {
     화남: 0,
@@ -30,17 +31,27 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
     }
   };
 
-  const handleMessageClick = (msg) => {
+  const handleMessageClick = async (msg) => {
     const clickedMsg = msg.message; // 클릭한 메시지의 내용
     setClickedMessage(clickedMsg);
-
-    // 감정 분석 및 AI 답변 예시 설정
-    const detectedEmotion = analyzeEmotion(clickedMsg); // 감정 분석 로직
-    const aiResponse = getAiSuggestion(detectedEmotion); // AI 답변 예시
-
-    setEmotion(emotionMapping[detectedEmotion]); // 숫자로 된 감정 값 설정
-    setAiSuggestion(aiResponse);
-    setShowResultModal(true);
+  
+    let aiResponse = null;
+  
+    // AI 추천 응답이 없을 경우에만 서버로 요청
+    if (!msg.aiSuggestion) {
+      // API 요청을 클릭 시에만 발생
+      aiResponse = await getAiSuggestion(msg); // 비동기 API 요청 (클릭 시에만 발생)
+    } else {
+      aiResponse = msg.aiSuggestion; // 이미 존재하는 AI 응답을 사용
+    }
+  
+    // 감정 분석 로직
+    const detectedEmotion = analyzeEmotion(clickedMsg);
+  
+    // 상태 업데이트
+    setEmotion(emotionMapping[detectedEmotion]); // 감정 상태 설정
+    setAiSuggestion(aiResponse); // AI 응답 설정
+    setShowResultModal(true); // 모달 표시
   };
 
   // 감정 분석 로직 (임시로 간단한 분석 함수)
@@ -53,20 +64,48 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
     // 더 많은 감정 분석 조건 추가 가능
     return '평범함';
   };
-
-  // AI 답변 예시 제공 (임시)
-  const getAiSuggestion = (emotion) => {
-    const suggestions = {
-      슬픔: '왜 슬프니',
-      행복함: '왜 행복하니',
-      싫어함: '왜 싫니',
-      두려움: '왜 두렵니',
-      화남: '왜 화나니',
-      평범함: '현재 특별한 감정 상태는 아니지만 상대방의 이야기를 경청하세요.',
-    };
-    return suggestions[emotion] || '적절한 답변을 고민해보세요.';
+  const getAiSuggestion = async (msg) => {
+    const localAccessToken = getCookies().accessToken;
+    try {
+      console.log(msg.id);  // ID가 올바르게 출력되는지 확인
+  
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/OpenAI/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localAccessToken}`,
+        },
+        body: JSON.stringify({ id: msg.id })  // 객체로 감싸서 전달
+      });
+  
+      if (!response.ok) {
+        throw new Error('AI 서버 응답 오류');
+      }
+  
+      const data = await response.json();  // API 응답 데이터
+      console.log(data);
+  
+      if (!data || !data.resultData) {
+        throw new Error(data.resultMsg);
+      }
+  
+      return data.resultData;  // 서버에서 받은 데이터를 반환
+    } catch (error) {
+      console.error('Error fetching AI suggestion:', error.message);
+      return ['적절한 답변을 고민해보세요.'];  // 오류 발생 시 기본 메시지 반환
+    }
   };
-
+  // const getAiSuggestion = (emotion) => {
+  //   const suggestions = {
+  //     슬픔: '왜 슬프니',
+  //     행복함: '왜 행복하니',
+  //     싫어함: '왜 싫니',
+  //     두려움: '왜 두렵니',
+  //     화남: '왜 화나니',
+  //     평범함: '현재 특별한 감정 상태는 아니지만 상대방의 이야기를 경청하세요.',
+  //   };
+  //   return suggestions[emotion] || '적절한 답변을 고민해보세요.';
+  // };
   return (
     <div className='messages'>
       {messages.map((msg, index) => (
@@ -94,4 +133,3 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
 };
 
 export default Messages;
-
