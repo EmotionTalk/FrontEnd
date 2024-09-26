@@ -22,9 +22,9 @@ const Main = () => {
   const [selectedUserProfile, setSelectedUserProfile] = useState(null);
   const [myProfile, setMyProfile] = useState(null);
   const [myNickName, setMyNickName] = useState('로그인을 해주세요!');
-  const [lastMessages, setLastMessages] = useState({});
   const [friendId, setFriendId] = useState(null);
   const [friendsList, setFriendsList] = useState([]); // 친구 목록을 빈 배열로 초기화
+  const [chatList, setChatList] = useState([]); // 채팅 목록을 빈 배열로 초기화
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const { height, width } = useWindowDimensions();
 
@@ -56,9 +56,34 @@ const Main = () => {
       }
     }
   };
+  const fetchChatRoom = async () => {
+    const localAccessToken = getCookies().accessToken;
+    if (localAccessToken) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/chatroom/getChatRoom`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localAccessToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data)
+        setChatList(data.resultData || []); // 친구 목록 설정, 없으면 빈 배열
+      } catch (error) {
+        console.error('채팅 목록 불러오기 오류:', error);
+        setChatList([]); // 오류 발생 시 빈 배열로 설정
+      }
+    }
+  };
 
   useEffect(() => {
-    console.log('FriendsList State:', friendsList); // 친구 목록이 업데이트될 때마다 콘솔 출력
+    fetchChatRoom()
     const { accessToken, refreshToken } = getCookies();
     if (!accessToken || !refreshToken) {
       setShowLoginModal(true);
@@ -134,11 +159,6 @@ const Main = () => {
   };
 
   const handleDeleteFriend = () => {
-    setLastMessages(prevMessages => {
-      const updatedMessages = { ...prevMessages };
-      delete updatedMessages[friendId];
-      return updatedMessages;
-    });
   };
 
   return (
@@ -155,7 +175,7 @@ const Main = () => {
                 <>
                   <ChatList 
                     onUserChatClick={handleUserChatClick} 
-                    lastMessages={lastMessages} 
+                    chatList = {chatList} 
                   />
                   {firstClick && <ChatStart />}
                   {!firstClick && showChat && (
@@ -165,7 +185,6 @@ const Main = () => {
                       myProfile={myProfile}
                       onClose={handleChatClose}
                       friendId={friendId}
-                      setLastMessages={setLastMessages}
                     />
                   )}
                 </>
@@ -189,7 +208,6 @@ const Main = () => {
                       myProfile={myProfile}
                       onClose={handleChatClose}
                       friendId={friendId}
-                      setLastMessages={setLastMessages}
                     />
                   )}
                 </>
@@ -213,7 +231,6 @@ const Main = () => {
                       myProfile={myProfile}
                       onClose={handleChatClose}
                       friendId={friendId}
-                      setLastMessages={setLastMessages}
                     />
                   )}
                 </>
@@ -239,7 +256,6 @@ const Main = () => {
                 myProfile={myProfile}
                 onClose={handleChatClose}
                 friendId={friendId}
-                setLastMessages={setLastMessages}
               />
           )}
           </>
@@ -262,7 +278,6 @@ const Main = () => {
                 myProfile={myProfile}
                 onClose={handleChatClose}
                 friendId={friendId}
-                setLastMessages={setLastMessages}
               />
           )}
           </>
@@ -272,7 +287,7 @@ const Main = () => {
                 { !showChat && (
                   <ChatList 
                     onUserChatClick={handleUserChatClick} 
-                    lastMessages={lastMessages} 
+                    chatList = {chatList} 
                   />
                   )}
                   { showChat && (
@@ -282,7 +297,6 @@ const Main = () => {
                       myProfile={myProfile}
                       onClose={handleChatClose}
                       friendId={friendId}
-                      setLastMessages={setLastMessages}
                     />
                   )}
               </>
