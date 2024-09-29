@@ -59,7 +59,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
 
     const connect = (chatRoomId) => {
       const localAccessToken = getCookies().accessToken;
-      const socket = new WebSocket(`ws://${process.env.REACT_APP_IP}:8080/ws`);
+      const socket = new WebSocket(`ws://${process.env.REACT_APP_LOCAL_IP}:8080/ws`);
       stompClient.current = Stomp.over(socket);
       stompClient.current.connect({ 'Authorization' : `Bearer ${localAccessToken}` }, () => {
         console.log('Connected to WebSocket');
