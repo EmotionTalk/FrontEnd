@@ -288,6 +288,10 @@
 .userChatInfo p{
     font-size: 14px;
     color: rgb(79, 79, 79);
+    max-height: 50px; /* 원하는 높이로 조정 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+
+      
 }
 /* Start.jsx */
 .start{
