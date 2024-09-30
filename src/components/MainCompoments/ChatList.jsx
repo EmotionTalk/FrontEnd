@@ -5,15 +5,20 @@ import "./style.css";
 import CA from '../../assets/채팅추가.svg';
 
 const ChatList = ({ onUserChatClick, chatList = [] }) => {
+  console.log(chatList)
   const handleChatClick = (userName) => {
     if (onUserChatClick) {
       onUserChatClick(userName); // 클릭한 사용자의 이름을 부모 컴포넌트로 전달
     }
   };
 
-  const truncateMessage = (message, length = 20) => {
+  const truncateMessage = (message = '', length = 20) => {
+    if (!message) {
+      return ''; // message가 null, undefined, 혹은 빈 문자열일 때 빈 문자열 반환
+    }
     return message.length > length ? `${message.slice(0, length)}...` : message;
   };
+  
 
   return (
     <div className='chatlist'>
