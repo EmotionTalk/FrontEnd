@@ -19,6 +19,14 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [recordedTime, setRecordedTime]=useState(0); // 녹음된 시간
     const audioRef=useRef(null); // 오디오 요소 참조
     const {transcript, resetTranscript}=useSpeechRecognition(); // 음성인식 결과 저장
+    const [emotion,setEmotion]=useState(null); // 감정 분석 결과
+    const [isEmotionConfirmModalOpen,setIsEmotionConfirmModalOpen]=useState(false); // 감정 확인 모달 창 표시
+
+    const sendTranscriptToBackend=async(transcript)=>{
+        try{
+            const response=await fetch()
+        }
+    }
 
     useEffect(()=>{
         // 녹음 중 시간 기록 타이머
@@ -113,35 +121,57 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
         resetTranscript(); // 음성인식 결과 초기화
     }
     
-
-    // 녹음된 오디오 파일 전송 버튼
-    const handleSendAudio=useCallback(()=>{
-        if(audioUrl){
-            fetch(audioUrl)
-                // 오디오 파일 Blob 객체로 가져옴
-                .then((res)=>res.blob())
-                // Blob 객체 File로 변환
-                .then((blob)=>{
-                    const audioFile=new File([blob],"audio_message.wav",{
-                        type:"audio/wav",
-                        lastModified:new Date(),
-                    });
-                    return sendAudioFile(audioFile); // 서버로 전송
-                })
-                .then(()=>{
-                    return sentToGPT(transcript);
-                })
-                .then(() => {
-                    toast.success("오디오 파일이 성공적으로 전송되었습니다.");
-                    closeRecordModal();
-                })
-                .catch(() => {
-                    toast.error("오디오 파일 전송에 실패했습니다.");
-                    closeRecordModal();
-                });
+    // transcript 백엔드 전송
+    const sendTranscript=async()=>{
+        try{
+            await sendTranscriptToBackend(transcript);;
+            toast.success("Transcript가 성공적으로 전송되었습니다.");
+        } catch(error){
+            toast.error("Transcript 전송에 실패했습니다.");
         }
-    },[audioUrl,closeRecordModal,sendAudioFile])
+    }
 
+    // audio file AI서버로 전송, 감정 분석 결과 받기
+    const sendAudioToAI=async()=>{
+        try{
+            const response=await fetch(aiEmotionUrl,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"audio/wav",
+                },
+                body:audioUrl,
+            });
+
+            if(!response.ok){
+                throw new Error("AI 서버 오류");
+            }
+
+            const data=await response.json();
+            setEmotion(data.emotion); // 감정 저장
+            setIsEmotionConfirmModalOpen(true);
+        } catch(error){
+            toast.error("AI 감정 분석에 실패했습니다.")
+        }
+    }
+
+    // 감정, audio file 백엔드 전송
+    const handleConfirmEmotion=async()=>{
+        try{
+            await sendEmotionToBackend({emotion,audioFile:audioUrl});
+            toast.success("감정과 오디오 파일이 성공적으로 전송되었습니다.");
+            closeRecordModal();
+        } catch(error){
+            toast.error("최종 전송에 실패했습니다.");
+        }
+    }
+
+    // 전송 버튼 클릭
+    const handleSendAudio=useCallback(async()=>{
+        await sendTranscript();
+        await sendAudioToAI();
+    }, [audioUrl,transcript]);
+
+ 
     const getRecordButtonClass=()=>{
         if(isRecording) return "RecordStopButton"
         if (isRecorded) return "RecordResetButton"
@@ -200,6 +230,15 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         onEnded={handlePlaybackEnded}
                         style={{display:"none"}}
                         controls/>
+                )}
+
+                {/* 감정 확인 모달 */}
+                {isEmotionConfirmModalOpen && (
+                    <div className="EmotionConfirmModal">
+                        <p>감정분석결과:{emotion}</p>
+                        <button onClick={handleConfirmEmotion}>확인</button>
+                    
+                    </div>
                 )}
             </div>
         </div>
