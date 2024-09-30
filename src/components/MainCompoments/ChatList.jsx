@@ -6,9 +6,9 @@ import CA from '../../assets/채팅추가.svg';
 
 const ChatList = ({ onUserChatClick, chatList = [] }) => {
   console.log(chatList)
-  const handleChatClick = (userName) => {
+  const handleChatClick = (userName, friendId, profileUrl) => {
     if (onUserChatClick) {
-      onUserChatClick(userName); // 클릭한 사용자의 이름을 부모 컴포넌트로 전달
+      onUserChatClick(userName, friendId, profileUrl); // 클릭한 사용자의 이름을 부모 컴포넌트로 전달
     }
   };
 
@@ -33,7 +33,7 @@ const ChatList = ({ onUserChatClick, chatList = [] }) => {
             <div 
               key={index} // 고유한 key를 각 항목에 추가
               className="userChat" 
-              onClick={() => handleChatClick(chat.nickName)} // 동적으로 클릭된 사용자의 이름을 전달
+              onClick={() => handleChatClick(chat.nickName,chat.friendId, chat.friendProfileImageUrl)} // 동적으로 클릭된 사용자의 이름을 전달
             >
               <img 
                 src={chat.friendProfileUrl ? chat.friendProfileUrl : Profile} 

@@ -73,7 +73,7 @@ const Main = () => {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log("채팅방들 : "+data)
         setChatList(data.resultData || []); // 친구 목록 설정, 없으면 빈 배열
       } catch (error) {
         console.error('채팅 목록 불러오기 오류:', error);
@@ -176,6 +176,8 @@ const Main = () => {
                   <ChatList 
                     onUserChatClick={handleUserChatClick} 
                     chatList = {chatList} 
+                    myProfile={myProfile}
+
                   />
                   {firstClick && <ChatStart />}
                   {!firstClick && showChat && (
