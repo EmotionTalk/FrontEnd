@@ -95,17 +95,6 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
       return ['적절한 답변을 고민해보세요.'];  // 오류 발생 시 기본 메시지 반환
     }
   };
-  // const getAiSuggestion = (emotion) => {
-  //   const suggestions = {
-  //     슬픔: '왜 슬프니',
-  //     행복함: '왜 행복하니',
-  //     싫어함: '왜 싫니',
-  //     두려움: '왜 두렵니',
-  //     화남: '왜 화나니',
-  //     평범함: '현재 특별한 감정 상태는 아니지만 상대방의 이야기를 경청하세요.',
-  //   };
-  //   return suggestions[emotion] || '적절한 답변을 고민해보세요.';
-  // };
   return (
     <div className='messages'>
       {messages.map((msg, index) => (
