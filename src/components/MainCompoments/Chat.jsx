@@ -11,7 +11,7 @@ import { Stomp } from "@stomp/stompjs";
 import moment from 'moment-timezone';
 import 'moment/locale/ko'; // 한국어 로케일 추가
 
-const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMessages }) => {
+const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [chatRoomId, setChatRoomId] = useState(null);
@@ -22,7 +22,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId, setLastMess
   const { getCookies } = useCookieManager();
   useEffect(() => {
     moment.locale('ko');
-  
+    console.log(friendId)
     const getChatRoom = async (friendId) => {
       console.log("채팅방 입성");
       const localAccessToken = getCookies().accessToken;
