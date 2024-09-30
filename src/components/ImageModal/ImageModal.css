@@ -1,0 +1,50 @@
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(128, 128, 128, 0.8); /* 회색 불투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+  }
+  
+  .image-modal-content {
+    position: relative;
+    width: 80%; /* 모달 콘텐츠 너비를 80%로 설정 */
+    max-width: 600px; /* 최대 너비 설정 */
+    height: 80%; /* 모달 콘텐츠 높이 설정 */
+    max-height: 80vh; /* 최대 높이를 뷰포트의 80%로 설정 */
+    background-color: white; /* 흰색 배경 */
+    padding: 20px; /* 여백 추가 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .enlargedImage {
+    max-width: 100%; /* 이미지를 모달 콘텐츠의 너비에 맞추기 */
+    max-height: 100%; /* 이미지를 모달 콘텐츠의 높이에 맞추기 */
+    border-radius: 8px; /* 모서리 둥글게 */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px; /* 상단에서 10px */
+    right: 10px; /* 오른쪽에서 10px */
+    font-size: 24px;
+    color: black; /* 닫기 버튼 색상 */
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.3s;
+  }
+  
+  .close-button:hover {
+    color: #ff0000; /* 마우스 오버 시 색상 변경 */
+  }
+  

@@ -11,6 +11,10 @@ const ChatList = ({ onUserChatClick, chatList = [] }) => {
     }
   };
 
+  const truncateMessage = (message, length = 20) => {
+    return message.length > length ? `${message.slice(0, length)}...` : message;
+  };
+
   return (
     <div className='chatlist'>
       <div className='navbar'>
@@ -33,7 +37,7 @@ const ChatList = ({ onUserChatClick, chatList = [] }) => {
               />
               <div className="userChatInfo">
                 <span>{chat.nickName}</span> 
-                <p>{chat.lastChat}</p>
+                <p>{truncateMessage(chat.lastChat)}</p> {/* 트렁케이트 처리 */}
               </div>
             </div>
           ))
