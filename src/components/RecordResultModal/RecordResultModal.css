@@ -1,0 +1,89 @@
+.record-result-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+  
+.record-result-modal {
+    background: #ffffff; /* 깔끔한 화이트 배경 */
+    border-radius: 20px; /* 둥근 모서리 */
+    width: 500px; /* 고정된 너비 */
+    height: 450px; /* 고정된 높이 */
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); /* 강력한 그림자 효과 */
+    position: relative;
+    text-align: center;
+    overflow: hidden; /* 스크롤 영역을 모달 내부에만 제한 */
+    animation: fade-in-up 0.5s ease-out; /* 모달이 올라오는 애니메이션 */
+}
+
+@keyframes fade-in-up {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+}
+
+.rx {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    opacity: 0.6;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+  
+.rx:hover {
+    opacity: 1;
+    transform: rotate(90deg); /* 호버 시 닫기 버튼에 회전 효과 */
+}
+
+/* 전송 버튼 스타일 */
+.send-button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+}
+
+.send-button {
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* 그라데이션 배경 */
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* 완전히 동그란 버튼 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.send-button:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); /* 호버 시 그림자 확장 */
+    transform: translateY(-3px); /* 살짝 올라오는 효과 */
+}
+
+.send-button:active {
+    transform: scale(0.96); /* 클릭 시 살짝 줄어드는 효과 */
+}
+
+.send-icon {
+    width: 24px;
+    height: 24px;
+}

@@ -8,8 +8,10 @@ import List from "../../components/MainCompoments/List";
 import Start from "../../components/MainCompoments/Start";
 import ChatList from "../../components/MainCompoments/ChatList";
 import ChatStart from "../../components/MainCompoments/ChatStart";
-import ContextMenu from "../../components/MainCompoments/ContextMenu";  // 새로 생성한 ContextMenu 컴포넌트 가져오기
+import ContextMenu from "../../components/MainCompoments/ContextMenu";
 import "./style.css";
+import useWindowDimensions from '../../customHook/useWindowDimensions';
+import MobileFriendList from "../../components/MainCompoments/MobileFriendList";
 
 const Main = () => {
   const [view, setView] = useState('default');
@@ -19,21 +21,78 @@ const Main = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedUserProfile, setSelectedUserProfile] = useState(null);
   const [myProfile, setMyProfile] = useState(null);
-  const [lastMessages, setLastMessages] = useState({});
+  const [myNickName, setMyNickName] = useState('로그인을 해주세요!');
   const [friendId, setFriendId] = useState(null);
+  const [friendsList, setFriendsList] = useState([]); // 친구 목록을 빈 배열로 초기화
+  const [chatList, setChatList] = useState([]); // 채팅 목록을 빈 배열로 초기화
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
+  const { height, width } = useWindowDimensions();
 
-  const { getCookies } = useCookieManager();
+  const { getCookies, removeCookies } = useCookieManager();
+
+  // 친구 목록을 불러오는 함수
+  const fetchFriends = async () => {
+    const localAccessToken = getCookies().accessToken;
+    if (localAccessToken) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/friend/getFriends`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localAccessToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('친구 목록 가져오기:', data.resultData);
+        setFriendsList(data.resultData || []); // 친구 목록 설정, 없으면 빈 배열
+      } catch (error) {
+        console.error('친구 목록 불러오기 오류:', error);
+        setFriendsList([]); // 오류 발생 시 빈 배열로 설정
+      }
+    }
+  };
+  const fetchChatRoom = async () => {
+    const localAccessToken = getCookies().accessToken;
+    if (localAccessToken) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/chatroom/getChatRoom`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localAccessToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log("채팅방들 : "+data)
+        setChatList(data.resultData || []); // 친구 목록 설정, 없으면 빈 배열
+      } catch (error) {
+        console.error('채팅 목록 불러오기 오류:', error);
+        setChatList([]); // 오류 발생 시 빈 배열로 설정
+      }
+    }
+  };
 
   useEffect(() => {
+    fetchChatRoom()
     const { accessToken, refreshToken } = getCookies();
     if (!accessToken || !refreshToken) {
       setShowLoginModal(true);
+      return;
     }
-
-    // Fetch my profile information
+    
+    // 내 프로필 정보 가져오기
     if (accessToken) {
-      fetch('http://localhost:8080/auth/user', {
+      fetch(`${process.env.REACT_APP_SERVER_URL}/auth/user`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -42,11 +101,15 @@ const Main = () => {
       })
       .then(response => response.json())
       .then(data => {
+        setMyNickName(data.resultData.name);
         setMyProfile(data.resultData.profileUrl);
+        fetchFriends(); // 친구 목록도 함께 가져옴
       })
-      .catch(error => console.error('Error fetching my profile:', error));
+      .catch(e => {
+        removeCookies(); // 오류 시 쿠키 제거 및 로그아웃 처리
+      });
     }
-  }, [getCookies]);
+  }, [getCookies().accessToken]); // 의존성 배열을 빈 배열로 설정해서 최초 로딩 시만 실행
 
   const handleCloseModal = () => {
     setShowLoginModal(false);
@@ -81,7 +144,6 @@ const Main = () => {
   const handleContextMenu = (event, friend) => {
     event.preventDefault();  // 기본 우클릭 메뉴 비활성화
   
-    // 우클릭 이벤트가 아닐 경우 리턴
     if (event.type !== "contextmenu") {
       return;
     }
@@ -90,7 +152,6 @@ const Main = () => {
     setSelectedUserProfile(friend.friendProfileImageUrl);
     setFriendId(friend.friendMemberId);
   
-    // 마우스 위치에 맞춰 컨텍스트 메뉴 위치 설정
     setContextMenuPosition({
       x: event.clientX,
       y: event.clientY
@@ -98,12 +159,6 @@ const Main = () => {
   };
 
   const handleDeleteFriend = () => {
-    setLastMessages(prevMessages => {
-      const updatedMessages = { ...prevMessages };
-      delete updatedMessages[friendId];
-      return updatedMessages;
-    });
-    // TODO: 서버와 연동하여 친구 삭제
   };
 
   return (
@@ -112,57 +167,142 @@ const Main = () => {
       {!showLoginModal && (
         <div className="container">
           <Sidebar onChatClick={handleChatView} onMyClick={handleMyView} />
-          {view === 'chat' && (
+          
+          {width >= 850 ? (
+            // 850 이상일 때 렌더링되는 컴포넌트
             <>
-              <ChatList 
-                onUserChatClick={handleUserChatClick} 
-                lastMessages={lastMessages} 
+              {view === 'chat' && (
+                <>
+                  <ChatList 
+                    onUserChatClick={handleUserChatClick} 
+                    chatList = {chatList} 
+                    myProfile={myProfile}
+
+                  />
+                  {firstClick && <ChatStart />}
+                  {!firstClick && showChat && (
+                    <Chat
+                      userName={selectedUser}
+                      userProfile={selectedUserProfile}
+                      myProfile={myProfile}
+                      onClose={handleChatClose}
+                      friendId={friendId}
+                    />
+                  )}
+                </>
+              )}
+              {view === 'my' && (
+                <>
+                  <My 
+                    userNickName={myNickName} 
+                    userProfileUrl={myProfile} 
+                  />
+                  <List 
+                    onUserChatClick={handleUserChatClick} 
+                    onContextMenu={handleContextMenu} 
+                    friendsList={friendsList} 
+                  />
+                  {!showChat && <Start />}
+                  {showChat && (
+                    <Chat 
+                      userName={selectedUser}
+                      userProfile={selectedUserProfile}
+                      myProfile={myProfile}
+                      onClose={handleChatClose}
+                      friendId={friendId}
+                    />
+                  )}
+                </>
+              )}
+              {view === 'default' && (
+                <>
+                  <My 
+                    userNickName={myNickName} 
+                    userProfileUrl={myProfile} 
+                  />
+                  <List 
+                    onUserChatClick={handleUserChatClick} 
+                    onContextMenu={handleContextMenu} 
+                    friendsList={friendsList} 
+                  />
+                  {!showChat && <Start />}
+                  {showChat && (
+                    <Chat 
+                      userName={selectedUser}
+                      userProfile={selectedUserProfile}
+                      myProfile={myProfile}
+                      onClose={handleChatClose}
+                      friendId={friendId}
+                    />
+                  )}
+                </>
+              )}
+            </>
+          ) : (
+            // 850 미만일 때 MobileFriendList 컴포넌트 렌더링
+            <>
+            {view === 'default' &&(
+              <>
+            {!showChat && (
+              <MobileFriendList
+              userNickName={myNickName} 
+              userProfileUrl={myProfile} 
+              friendsList={friendsList} 
+              onUserChatClick={handleUserChatClick}
               />
-              {firstClick && <ChatStart />}
-              {!firstClick && showChat && (
-                <Chat
-                  userName={selectedUser}
-                  userProfile={selectedUserProfile}
-                  myProfile={myProfile}
-                  onClose={handleChatClose}
-                  friendId={friendId}
-                  setLastMessages={setLastMessages}
-                />
-              )}
-            </>
+            )}
+            {showChat && (
+              <Chat 
+                userName={selectedUser}
+                userProfile={selectedUserProfile}
+                myProfile={myProfile}
+                onClose={handleChatClose}
+                friendId={friendId}
+              />
           )}
-          {view === 'my' && (
-            <>
-              <My />
-              <List onUserChatClick={handleUserChatClick} onContextMenu={handleContextMenu} />
-              {!showChat && <Start />}
-              {showChat && (
-                <Chat 
-                  userName={selectedUser}
-                  userProfile={selectedUserProfile}
-                  myProfile={myProfile}
-                  onClose={handleChatClose}
-                  friendId={friendId}
-                  setLastMessages={setLastMessages}
-                />
-              )}
-            </>
+          </>
+            )}
+            {view === 'my' &&(
+              <>
+            {!showChat && (
+              <MobileFriendList
+              userNickName={myNickName} 
+              userProfileUrl={myProfile} 
+              friendsList={friendsList} 
+              onContextMenu={handleContextMenu} 
+              onUserChatClick={handleUserChatClick}
+              />
+            )}
+            {showChat && (
+              <Chat 
+                userName={selectedUser}
+                userProfile={selectedUserProfile}
+                myProfile={myProfile}
+                onClose={handleChatClose}
+                friendId={friendId}
+              />
           )}
-          {view === 'default' && (
-            <>
-              <My />
-              <List onUserChatClick={handleUserChatClick} onContextMenu={handleContextMenu} />
-              {!showChat && <Start />}
-              {showChat && (
-                <Chat 
-                  userName={selectedUser}
-                  userProfile={selectedUserProfile}
-                  myProfile={myProfile}
-                  onClose={handleChatClose}
-                  friendId={friendId}
-                  setLastMessages={setLastMessages}
-                />
-              )}
+          </>
+            )}
+            {view === 'chat' &&(
+              <>
+                { !showChat && (
+                  <ChatList 
+                    onUserChatClick={handleUserChatClick} 
+                    chatList = {chatList} 
+                  />
+                  )}
+                  { showChat && (
+                    <Chat
+                      userName={selectedUser}
+                      userProfile={selectedUserProfile}
+                      myProfile={myProfile}
+                      onClose={handleChatClose}
+                      friendId={friendId}
+                    />
+                  )}
+              </>
+            )}
             </>
           )}
         </div>

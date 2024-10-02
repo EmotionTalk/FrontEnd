@@ -9,6 +9,8 @@ import ResetIcon from "../../assets/reset_icon.png";
 import SendIcon from "../../assets/send_white_icon.png";
 import {toast} from "react-toastify";
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
+import { useCookieManager } from '../../customHook/useCookieManager';
+import RecordResultForMeModal from "../../components/RecordResultForMeModal";
 
 const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [isRecording,setIsRecording]=useState(false); // 녹음 중인지 여부
@@ -19,14 +21,11 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
     const [recordedTime, setRecordedTime]=useState(0); // 녹음된 시간
     const audioRef=useRef(null); // 오디오 요소 참조
     const {transcript, resetTranscript}=useSpeechRecognition(); // 음성인식 결과 저장
-    const [emotion,setEmotion]=useState(null); // 감정 분석 결과
-    const [isEmotionConfirmModalOpen,setIsEmotionConfirmModalOpen]=useState(false); // 감정 확인 모달 창 표시
-
-    const sendTranscriptToBackend=async(transcript)=>{
-        try{
-            const response=await fetch()
-        }
-    }
+    const [isSending,setIsSending]=useState(false);
+    const [emotionResult, setEmotionResult] = useState(null); // 감정 예측 결과
+    const [openAIResult, setOpenAIResult] = useState(null); // OpenAI 서버 결과 저장
+    const [openResultModal, setOpenResultModal] = useState(false); // 결과 모달 창 상태
+    const { getCookies } = useCookieManager();
 
     useEffect(()=>{
         // 녹음 중 시간 기록 타이머
@@ -120,62 +119,87 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
         setIsPlaying(false);
         resetTranscript(); // 음성인식 결과 초기화
     }
-    
-    // transcript 백엔드 전송
-    const sendTranscript=async()=>{
-        try{
-            await sendTranscriptToBackend(transcript);;
-            toast.success("Transcript가 성공적으로 전송되었습니다.");
-        } catch(error){
-            toast.error("Transcript 전송에 실패했습니다.");
-        }
-    }
 
-    // audio file AI서버로 전송, 감정 분석 결과 받기
-    const sendAudioToAI=async()=>{
-        try{
-            const response=await fetch(aiEmotionUrl,{
-                method:"POST",
-                headers:{
-                    "Content-Type":"audio/wav",
-                },
-                body:audioUrl,
-            });
-
-            if(!response.ok){
-                throw new Error("AI 서버 오류");
-            }
-
-            const data=await response.json();
-            setEmotion(data.emotion); // 감정 저장
-            setIsEmotionConfirmModalOpen(true);
-        } catch(error){
-            toast.error("AI 감정 분석에 실패했습니다.")
-        }
-    }
-
-    // 감정, audio file 백엔드 전송
-    const handleConfirmEmotion=async()=>{
-        try{
-            await sendEmotionToBackend({emotion,audioFile:audioUrl});
-            toast.success("감정과 오디오 파일이 성공적으로 전송되었습니다.");
-            closeRecordModal();
-        } catch(error){
-            toast.error("최종 전송에 실패했습니다.");
-        }
-    }
-
-    // 전송 버튼 클릭
-    const handleSendAudio=useCallback(async()=>{
-        await sendTranscript();
-        await sendAudioToAI();
-    }, [audioUrl,transcript]);
-
- 
     const getRecordButtonClass=()=>{
         if(isRecording) return "RecordStopButton"
         if (isRecorded) return "RecordResetButton"
         return "RecordStartButton";
+    }
+
+    // 결과 모달 닫기 핸들러
+    const handleCloseResultModal = () => {
+        setOpenResultModal(false);
+    };
+
+    const handleSend=async()=>{
+        if(!audioUrl) return;
+
+        setIsSending(true);
+
+        try{
+            const localAccessToken = getCookies().accessToken;
+            // 1. AI서버에 오디오 파일 전송
+            const formDataAI = new FormData();
+            const audioBlob = await fetch(audioUrl).then((r) => r.blob());
+            formDataAI.append('file',audioBlob,'audio.wav');
+
+            const aiResponse=await fetch(`${process.env.REACT_APP_AI_SERVER}/predict/`,{
+                method: 'POST',
+                body: formDataAI,
+                mode: 'cors',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                  },
+            });
+
+            if(!aiResponse.ok){
+                throw new Error('AI 서버 요청 실패');
+            }
+
+            // 감정 예측 결과 수신
+            const result = await aiResponse.json();
+            setEmotionResult(result.prediction); // 감정 예측 결과 설정
+            console.log("AI 예측 결과:", result);
+
+            toast.success('감정 예측 성공')
+
+            // 2. openAI 서버에 텍스트 전송
+
+            const openAIResponse=await fetch(`${process.env.REACT_APP_SERVER_URL}/OpenAI/askForMe/`,{
+                method:"POST",
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localAccessToken}`,
+                },
+                body:JSON.stringify({content:transcript}),
+            });
+
+            if(!openAIResponse.ok) throw new Error('OpenAI 서버 요청 실패');
+
+            const openAIData = await openAIResponse.json();
+            const {statusCode, resultMsg, resultData}=openAIData;
+            console.log("OpenAI 응답 결과:", openAIData);
+
+            // OpenAI 응답 결과 저장
+            setOpenAIResult(openAIData.resultData);
+            setEmotionResult(result.prediction);
+
+            
+            // 백엔드 응답 결과를 기반으로 모달창에 결과 표시 (RecordResultModal 사용)
+            // sendAudioFile(audioUrl, transcript, result);
+            setOpenResultModal(true); // 결과 모달창 열기
+            // resetTranscript();
+            // setAudioUrl(null);
+            setIsRecorded(false);
+            setTimeout(() => {
+                setOpenResultModal(true); // 결과 모달창 열기
+            }, 0);
+        } catch (error){
+            console.error('fucking error',error);
+        } finally{
+            setIsSending(false)
+            setOpenResultModal(true)
+        }
     }
 
     return(
@@ -216,7 +240,7 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                     {/* 전송 */}
                     <img src={SendIcon}
                     className="SendButton"
-                    onClick={handleSendAudio}
+                    onClick={handleSend}
                     alt="전송"
                     disabled={!isRecorded}
                     style={{
@@ -231,14 +255,13 @@ const RecordModal=({closeRecordModal, sendAudioFile})=>{
                         style={{display:"none"}}
                         controls/>
                 )}
-
-                {/* 감정 확인 모달 */}
-                {isEmotionConfirmModalOpen && (
-                    <div className="EmotionConfirmModal">
-                        <p>감정분석결과:{emotion}</p>
-                        <button onClick={handleConfirmEmotion}>확인</button>
-                    
-                    </div>
+                {/* 결과 모달 */}
+                {openResultModal &&(
+                    <RecordResultForMeModal
+                        openAIResult={openAIResult}
+                        emotionResult={emotionResult}
+                        onClose={handleCloseResultModal}
+                    />
                 )}
             </div>
         </div>

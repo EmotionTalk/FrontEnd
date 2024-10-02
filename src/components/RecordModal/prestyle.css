@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease;
+    z-index: 1000; /* RecordModalBack의 z-index를 낮게 설정 */
 }
 
 @keyframes fadeIn{

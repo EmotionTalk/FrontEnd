@@ -1,24 +1,46 @@
+   /* 기존 스타일들 */
    .sidebar{
+    
     border-right: 1px solid #ECECEC;
     background-color: #1B83FC;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100px;
 
     .logo-img {
         width: 50px; /* 원하는 크기로 설정 */
         height: auto; /* 비율을 유지하고 싶다면 auto로 설정 */
+        margin: 18px 0;
+        padding: 0px;
     }
 }
-.sidebar img{
+
+.sidebar-icon{
     width: 30px;
     height: 30px;
-    margin-bottom: 15px;
-    margin-top: 15px;
+    padding: 15px 35px;
     cursor: pointer;
 }
-.sidebar img:hover {
+
+/* 선택된 아이콘에 대한 스타일 */
+.sidebar-icon.active path {
+    fill: #1B83FC;
+  }
+  
+/* 선택된 아이콘에 대한 스타일 */
+.sidebar-icon.active circle {
+    fill: #1B83FC;
+  }
+  
+.sidebar-icon.active{
+    background-color: white;
+}
+  /* 기본 상태 아이콘 스타일 */
+  .sidebar-icon path {
+    fill: white;
+  }
+  
+.sidebar-icon:hover {
     background-color: #61abff;
   }
 .my {
@@ -28,6 +50,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
 }
 .my .navbar{
     display: flex;
@@ -90,7 +113,6 @@
     border-right: 1px solid #ECECEC;
     background-color: #fff;
     position: relative;
-    width: 23%;
 }
 .list .navbar{
     display: flex;
@@ -161,17 +183,12 @@
     flex-direction: column;
     color: gray;
     font-weight: 300;
-    margin: auto 0;
 }
 .message .messageInfo img{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-}
-.message .messageInfo span{
-    margin: 0 auto;
-    margin-top: 10px;
 }
 .message .messageContent{
     max-width: 50%;
@@ -180,11 +197,11 @@
     gap: 0px;
 }
 .message .messageContent p{
-    background-color: rgb(172, 193, 255);
+    background-color: rgb(226 225 225);
     padding: 10px 10px;
     border-radius: 0px 10px 10px 10px;
     max-width: max-content;
-    color: #ffffff;
+    color: black;
 }
 .message .messageContent img{
     width: 100px;
@@ -248,22 +265,18 @@
 ::placeholder{
     color: lightgray;
 }
-.users {
+.users{
+    padding: 10px;
     display: flex;
     align-items: center;
+    gap: 10px;
     cursor: pointer;  
-    position: relative;
-    transition: transform 0.3s ease; /* 애니메이션 추가 */
-  }
-  .users.swiped {
-    transform: translateX(-70px); /* 왼쪽으로 이동 */
-  }
-.users .userProfileImg{
+}
+.users img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 10px;
 }
 .users:hover{
     background-color:rgb(235, 235, 235);
@@ -275,6 +288,10 @@
 .userChatInfo p{
     font-size: 14px;
     color: rgb(79, 79, 79);
+    max-height: 50px; /* 원하는 높이로 조정 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+
+      
 }
 /* Start.jsx */
 .start{
@@ -385,24 +402,4 @@
     outline: none;
     font-size: 20px;
     transition: width 1s, padding 0.5s, border 0.5s, font-size 0.5s;
-}
-.context-menu {
-    border-radius: 4px;
-    position: absolute;
-}
-  
-.context-menu button {
-display: block;
-width: 100%;
-background-color: #f8f8f8;
-border: none;
-color: #333;
-text-align: left;
-padding: 8px;
-margin: 5px 0;
-cursor: pointer;
-}
-
-.context-menu button:hover {
-background-color: #ddd;
 }
