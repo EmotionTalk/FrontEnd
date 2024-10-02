@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Message from "./Message";
-import ResultModal from "../ResultModal/ResultModal";
+import ResultModal from "../RecordResultModal/RecordResultModal";
 import LoadingModal from "../LoadingModal/LoadingModal"; 
 import ImageModal from "../ImageModal/ImageModal"; // 이미지 모달 추가
 import "./style.css";
