@@ -23,7 +23,7 @@ const RecordResultModal = ({ show, onClose, emotion, resultText, suggestedRespon
   };
 
   const currentEmotion = emotionMapping[emotion] || {};
-
+  
   return (
     <div className={show ? 'record-result-modal-overlay' : 'hidden'} onClick={onClose}>
       <div className="record-result-modal" onClick={(e) => e.stopPropagation()}>
