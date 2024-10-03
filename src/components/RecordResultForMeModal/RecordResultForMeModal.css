@@ -58,6 +58,15 @@
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+/* 추가 */
+/* 모달 본문을 스크롤 가능하게 */
+.modal-content {
+    padding: 20px;
+    max-height: 350px; /* 모달 본문의 최대 높이 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    margin-bottom: 60px; /* 전송 버튼과의 간격 확보 */
+}
+
 /* 섹션 제목 */
 .section-title {
     font-size: 1.0rem;
@@ -103,10 +112,22 @@
 }
 
 /* 전송 버튼 스타일 */
-.send-button-container {
+/* .send-button-container {
     margin-top: 10px;
     display: flex;
     justify-content: center;
+} */
+
+/* 추가 */
+/* 전송 버튼을 하단에 고정 */
+.send-button-container {
+    position: absolute; /* 모달 하단에 고정 */
+    bottom: 20px; /* 하단에서 20px 위로 */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
 }
 
 .send-button {
