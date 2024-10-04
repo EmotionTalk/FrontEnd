@@ -9,21 +9,39 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  .record-result-modal {
+}
+
+.record-result-modal {
     background: #ffffff;
     border-radius: 20px;
     width: 500px;
     height: 450px;
     padding: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* 더 부드러운 그림자 */
     position: relative;
     text-align: center;
     overflow: hidden;
-  }
-  
-  .rx {
+}
+
+.modal-content {
+    padding: 20px; /* 추가 여백 */
+}
+
+.section-title {
+    font-size: 18px; /* 제목 글씨 크기 증가 */
+    font-weight: bold;
+    margin-bottom: 10px; /* 아래쪽 여백 추가 */
+}
+
+.result-section {
+    background-color: #f9f9f9; /* 부드러운 배경색 */
+    border-radius: 10px;
+    padding: 15px; /* 안쪽 여백 */
+    margin-bottom: 15px; /* 아래쪽 여백 추가 */
+}
+
+
+.rx {
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -32,71 +50,54 @@
     right: 15px;
     opacity: 0.6;
     transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-  
-  .rx:hover {
+}
+
+.rx:hover {
     opacity: 1;
     transform: rotate(90deg);
-  }
-  
-  /* 감정 섹션 */
-  @keyframes subtleBounce {
+}
+
+/* 감정 섹션 */
+@keyframes subtleBounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
-  }
+}
 
-  .emotion-section {
+.emotion-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
-  }
-  
-  .emotion-icon {
+}
+
+.emotion-icon {
     width: 50px;
     height: 50px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); /* 그림자 효과 */
-    animation: subtleBounce 2s ease-in-out infinite; /* 부드러운 위아래 움직임 애니메이션 */
-    transition: transform 0.3s ease; /* 마우스를 올렸을 때 애니메이션 부드럽게 전환 */
-  }
- .emotion-icon:hover {
-    transform: scale(1.05); /* 마우스를 올리면 살짝 커짐 */
-    animation: none; /* 호버 상태일 때 애니메이션을 중지 */
-  }
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    animation: subtleBounce 2s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
 
-  
+.emotion-icon:hover {
+    transform: scale(1.05);
+    animation: none;
+}
+
 .emotion-text {
-    font-size: 14px; /* 글씨 크기를 좀 더 작게 */
+    font-size: 14px;
     font-weight: bold;
     margin-top: 10px;
-  }
-  
-  .emotion-text.angry {
-    color: red; /* 화남은 빨간색 */
-  }
-  
-  .emotion-text.awe {
-    color: purple; /* 두려움은 보라색 */
-  }
-  
-  .emotion-text.sad {
-    color: blue; /* 슬픔은 파란색 */
-  }
-  
-  .emotion-text.dislike {
-    color: brown; /* 싫어함은 갈색 */
-  }
-  
-  .emotion-text.ordinary {
-    color: gray; /* 평범함은 회색 */
-  }
-  
-  .emotion-text.happy {
-    color: yellow; /* 행복함은 노란색 */
-  }
-  
-  /* 결과 섹션 */
-  .result-section {
+}
+
+.emotion-text.angry { color: red; }
+.emotion-text.awe { color: purple; }
+.emotion-text.sad { color: blue; }
+.emotion-text.dislike { color: brown; }
+.emotion-text.ordinary { color: gray; }
+.emotion-text.happy { color: yellow; }
+
+/* 결과 섹션 */
+.result-section {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 10px;
@@ -105,24 +106,19 @@
     max-height: 100px;
     text-align: left;
     font-size: 14px;
-  }
-  
-  .transcription {
-    height: 80px;
-  }
-  
-  .suggested-response {
-    height: 120px;
-  }
-  
-  /* 전송 버튼 스타일 */
-  .send-button-container {
+}
+
+.transcription { height: 80px; }
+.suggested-response { height: 120px; }
+
+/* 전송 버튼 스타일 */
+.send-button-container {
     margin-top: 20px;
     display: flex;
     justify-content: center;
-  }
-  
-  .send-button {
+}
+
+.send-button {
     background: linear-gradient(45deg, #6a11cb, #2575fc);
     color: white;
     width: 60px;
@@ -135,19 +131,18 @@
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
-  }
-  
-  .send-button:hover {
+}
+
+.send-button:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     transform: translateY(-3px);
-  }
-  
-  .send-button:active {
+}
+
+.send-button:active {
     transform: scale(0.96);
-  }
-  
-  .send-icon {
+}
+
+.send-icon {
     width: 24px;
     height: 24px;
-  }
-  
+}
