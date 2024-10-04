@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import "./style.css";
 import DefaultProfile from "../../assets/pro.jpg";
 
-const Message = forwardRef(({ message, sendTime, image, sender, profileImage, userName, onClick, onImageClick }, ref) => {
+const Message = forwardRef(({ message, sendTime, image, sender, profileImage, userName, onClick, onImageClick, messageType }, ref) => {
   const handleMessageClick = () => {
     if (onClick) {
       onClick();
@@ -10,7 +10,7 @@ const Message = forwardRef(({ message, sendTime, image, sender, profileImage, us
   };
 
   return (
-    <div className={`message ${sender === 'me' ? 'owner' : ''}`} ref={ref}>
+    <div className={`message ${sender === 'me' ? 'owner' : ''} ${messageType === 'TRANSCRIPT' ? 'transcript-message' : ''}`} ref={ref}>
       <div className="messageInfo">
         <img src={profileImage || DefaultProfile} alt="profile" />
         <span>{userName}</span>

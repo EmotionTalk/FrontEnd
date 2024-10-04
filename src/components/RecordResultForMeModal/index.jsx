@@ -22,7 +22,7 @@ const emotionMapping = {
   5: { emotion: "행복함", icon: Happy }
 };
 
-const RecordResultForMeModal = ({ openAIResult, emotionResult, onClose, onSend }) => {
+const RecordResultForMeModal = ({ openAIResult, emotionResult, transcript, onClose, onSend }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal-container">
@@ -55,6 +55,14 @@ const RecordResultForMeModal = ({ openAIResult, emotionResult, onClose, onSend }
             )}
           </div>
 
+          {/* 실시간 음성 인식 텍스트 - 감정 예측 결과 밑에 배치 */}
+          <h3 className="section-title">음성 결과</h3>
+          {transcript && (
+            <div className="transcript-section">
+              <p>{transcript}</p>
+            </div>
+          )}
+
           {/* OpenAI 분석 결과 */}
           <h3 className="section-title">OpenAI 분석 결과</h3>
           <div className="result-section open">
@@ -64,7 +72,13 @@ const RecordResultForMeModal = ({ openAIResult, emotionResult, onClose, onSend }
 
         {/* 전송 버튼 */}
         <div className="send-button-container">
-          <button className="send-button" onClick={onSend}>
+          <button
+            className="send-button"
+            onClick={() => {
+              onSend(transcript);  // `onSend` 호출로 `Chat`에 데이터 전송
+              onClose();           // `onClose` 호출로 `RecordModal` 닫기
+            }}
+          >
             <img src={sendIcon} alt="send" className="send-icon" />
           </button>
         </div>
