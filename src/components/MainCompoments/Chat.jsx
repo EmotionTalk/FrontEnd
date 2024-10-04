@@ -20,6 +20,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
   const stompClient = useRef(null);
   const { getCookies } = useCookieManager();
+
   useEffect(() => {
     moment.locale('ko');
     console.log(friendId)
@@ -38,11 +39,11 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         setChatRoomId(data.resultData.chatRoomId);
         setUserId(data.resultData.userId);
         console.log('datas : ', data);
-  
+
         const formattedMessages = data.resultData.messages.map(msg => {
           const sendTimeString = msg.sendTime;
           const sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분');
-  
+
           return {
             id: msg.id,
             message: msg.message,
@@ -70,7 +71,6 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
           const newMessage = JSON.parse(message.body);
           const sendTimeString = newMessage.sendTime;
           newMessage.sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분');
-  
           // 기존 메시지를 업데이트하는 로직 추가
           setMessages((prevMessages) => {
             const updatedMessages = [...prevMessages];
@@ -91,6 +91,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         });
       });
     };
+
     if (friendId) {
       getChatRoom(friendId).then(() => {
         if (chatRoomId) {
@@ -98,7 +99,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         }
       });
     }
-  
+
     return () => {
       if (stompClient.current) {
         stompClient.current.disconnect(() => {
@@ -107,8 +108,8 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
       }
     };
   }, [friendId, chatRoomId]);
-  
 
+  // 음성 파일 전송 핸들러
   const sendAudioFile = async (audioFile) => {
     try {
       const formData = new FormData();
@@ -131,24 +132,22 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
     }
   };
 
-  const handleRecordBtn = () => {
-    setIsRecordModalOpen(true);
+// RecordModal의 전송 버튼 클릭 시 호출될 핸들러
+const handleTranscriptSend = (transcript) => {
+  const newMessage = {
+    id: Date.now(),
+    message: transcript,
+    sendTime: moment().tz('Asia/Seoul').format('A hh시 mm분'),
+    senderId: userId,
+    messageType: "TRANSCRIPT", // messageType이 'TRANSCRIPT'로 설정
   };
 
-  const closeRecordModal = () => {
-    setIsRecordModalOpen(false);
-  };
+  setMessages((prevMessages) => [...prevMessages, newMessage]);
+  scrollToBottom();
+};
 
-  const handleCloseClick = () => {
-    if (onClose) {
-      onClose();
-    }
-  };
 
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
-  };
-
+  // 메시지 전송 핸들러
   const handleSendMessage = () => {
     const localAccessToken = getCookies().accessToken;
     if (message.trim() !== "") {
@@ -171,6 +170,14 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
       setMessage("");
       scrollToBottom();
     }
+  };
+
+  const handleRecordBtn = () => {
+    setIsRecordModalOpen(true);
+  };
+
+  const closeRecordModal = () => {
+    setIsRecordModalOpen(false);
   };
 
   const handleKeyPress = (e) => {
@@ -239,28 +246,31 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
     scrollToBottom();
   }, [messages]);
 
-// 스크롤 함수 정의
-const scrollToBottom = () => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-  }
-};
+
+  // 스크롤 함수 정의
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    }
+  };
 
   return (
     <div className='chat'>
       <div className="chatInfo">
         <span>{userName}</span>
-        <img src={X} className='ix' onClick={handleCloseClick} />
-        <div className="chatIcons"></div>
-      </div>
+        <img src={X} className='ix' onClick={onClose} />
+        <div className="chatIcons"></div>      </div>
+      {/* 채팅 메시지 목록 컴포넌트 */}
       <Messages userName={userName} messages={messages} userId={userId} userProfile={userProfile} myProfile={myProfile} />
       <div ref={messagesEndRef} />
+
+      {/* 메시지 입력 및 전송 UI */}
       <div className='input'>
         <input
           type="text"
           placeholder='메세지를 입력하세요.'
           value={message}
-          onChange={handleMessageChange}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
         />
         <div className="send">
@@ -270,13 +280,14 @@ const scrollToBottom = () => {
             style={{ display: "none" }}
             id="file"
             onChange={handleFileChange}
-          />
-          {isRecordModalOpen && (
+          />          {isRecordModalOpen && (
             <RecordModal
               closeRecordModal={closeRecordModal}
-              sendAudioFile={sendAudioFile}
+              onTranscriptSend={handleTranscriptSend} // transcript 전송 핸들러 전달
             />
           )}
+          
+          <input type="file" style={{ display: "none" }} id="file" />
           <label htmlFor='file'>
             <img src={Pic} className='ip' alt="" />
           </label>

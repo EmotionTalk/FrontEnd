@@ -217,6 +217,12 @@
     color: white;
     border-radius: 10px 0px 10px 10px;
 }
+/* 실시간 음성 텍스트 변환 메시지 스타일 */
+.message.transcript-message .messageContent p {
+    background-color: #d1e7ff; /* 실시간 음성 텍스트 변환 메시지 배경색 */
+    color: #0056b3; /* 실시간 음성 텍스트 변환 메시지 텍스트 색상 */
+    border-radius: 10px 0px 10px 10px; /* 메시지 모서리 둥글게 */
+}
 .input{
     height: 50px;
     background-color: rgb(255, 255, 255);

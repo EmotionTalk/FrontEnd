@@ -118,6 +118,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
           userName={msg.senderId === userId ? '나' : userName}
           onClick={() => handleMessageClick(msg)}
           onImageClick={() => handleImageClick(msg.filePath)} // 이미지 클릭 핸들러 추가
+          messageType={msg.messageType} // 메시지 타입 전달
         />
       ))}
 
