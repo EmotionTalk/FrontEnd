@@ -48,12 +48,6 @@ const RecordResultModal = ({ show, onClose, emotion, resultText, suggestedRespon
           <p>{suggestedResponse}</p>
         </div>
 
-        {/* 전송 버튼 */}
-        <div className="send-button-container">
-          <button className="send-button" onClick={onSend}>
-            <img src={sendIcon} alt="send" className="send-icon" />
-          </button>
-        </div>
       </div>
     </div>
   );
