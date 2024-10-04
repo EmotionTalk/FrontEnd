@@ -150,17 +150,16 @@ const [showRecordResultModal, setShowRecordResultModal] = useState(false);
       {showImageModal && (
         <ImageModal image={currentImage} onClose={closeImageModal} />
       )}
+      
       {/* RecordResultModal 추가 */}
-      {showRecordResultModal && (
           <RecordResultModal 
               show={showRecordResultModal} 
               onClose={() => setShowRecordResultModal(false)} 
               emotion={emotion}
               resultText={clickedMessage} 
-              suggestedResponse={aiSuggestion} 
+              aiSuggestion={aiSuggestion}
           />
-      )}
-
+    
     </div>
   );
 };

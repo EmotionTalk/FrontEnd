@@ -1,148 +1,158 @@
-.record-result-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.modal-overlay1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* 더 어두운 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px); /* 배경 블러 처리 */
+  transition: opacity 0.4s ease-in-out; /* 부드러운 모달 애니메이션 */
 }
 
-.record-result-modal {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 500px;
-    height: 450px;
-    padding: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* 더 부드러운 그림자 */
-    position: relative;
-    text-align: center;
-    overflow: hidden;
+.modal1 {
+  background: #ffffff; /* 깔끔한 화이트 배경 */
+  border-radius: 20px; /* 둥근 모서리 */
+  width: 500px; /* 고정된 너비 */
+  height: 450px; /* 고정된 높이 */
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); /* 강력한 그림자 효과 */
+  position: relative;
+  text-align: center;
+  overflow: hidden; /* 스크롤 영역을 모달 내부에만 제한 */
+  animation: fade-in-up 0.5s ease-out; /* 모달이 올라오는 애니메이션 */
 }
 
-.modal-content {
-    padding: 20px; /* 추가 여백 */
+@keyframes fade-in-up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
-.section-title {
-    font-size: 18px; /* 제목 글씨 크기 증가 */
-    font-weight: bold;
-    margin-bottom: 10px; /* 아래쪽 여백 추가 */
-}
-
-.result-section {
-    background-color: #f9f9f9; /* 부드러운 배경색 */
-    border-radius: 10px;
-    padding: 15px; /* 안쪽 여백 */
-    margin-bottom: 15px; /* 아래쪽 여백 추가 */
-}
-
 
 .rx {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    opacity: 0.6;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  opacity: 0.6;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .rx:hover {
-    opacity: 1;
-    transform: rotate(90deg);
+  opacity: 1;
+  transform: rotate(90deg); /* 호버 시 닫기 버튼에 회전 효과 */
 }
 
-/* 감정 섹션 */
-@keyframes subtleBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+.modal-header1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.emotion-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
+.emo {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); /* 아이콘에 약간의 그림자 추가 */
+  animation: scale-bounce 1s infinite; /* 가벼운 크기 변화 애니메이션 */
 }
 
-.emotion-icon {
-    width: 50px;
-    height: 50px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-    animation: subtleBounce 2s ease-in-out infinite;
-    transition: transform 0.3s ease;
+@keyframes scale-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* 중간에 약간 커짐 */
+  }
 }
 
-.emotion-icon:hover {
-    transform: scale(1.05);
-    animation: none;
+.modal-body1 {
+  max-height: 250px; /* 모달 내에서 스크롤할 수 있는 높이 제한 */
+  overflow-y: auto; /* 세로 스크롤 활성화 */
+  text-align: left;
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.75;
+  font-family: 'Roboto', sans-serif;
 }
 
-.emotion-text {
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 10px;
+/* 스크롤바 숨기기 */
+.modal-body1::-webkit-scrollbar {
+  width: 0;
+  background: transparent; /* 스크롤바를 숨김 */
 }
 
-.emotion-text.angry { color: red; }
-.emotion-text.awe { color: purple; }
-.emotion-text.sad { color: blue; }
-.emotion-text.dislike { color: brown; }
-.emotion-text.ordinary { color: gray; }
-.emotion-text.happy { color: yellow; }
-
-/* 결과 섹션 */
-.result-section {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #f5f5f5;
-    overflow: hidden;
-    max-height: 100px;
-    text-align: left;
-    font-size: 14px;
+.modal-body1 p {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  padding: 0 10px;
+  white-space: pre-line; /* 줄바꿈을 유지 */
 }
 
-.transcription { height: 80px; }
-.suggested-response { height: 120px; }
-
-/* 전송 버튼 스타일 */
-.send-button-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
+.hidden {
+  display: none;
 }
 
-.send-button {
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+/* 상대방 메시지 내용 스타일 */
+.user-message {
+  background-color: #f9f9f9; /* 연한 회색 배경 */
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
-.send-button:hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    transform: translateY(-3px);
+.user-message p {
+  margin: 0;
 }
 
-.send-button:active {
-    transform: scale(0.96);
+/* AI 답변 예시 스타일 */
+.ai-suggestion {
+  background-color: #f4f4f4; /* 연한 회색 배경 */
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
-.send-icon {
-    width: 24px;
-    height: 24px;
+.suggestion-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #777;
+}
+
+.suggestion-content {
+  font-size: 0.9rem;
+  color: #333;
+}
+/* 모달 푸터 스타일 */
+.modal-footer1 {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.copy-btn {
+  background-color: #007bff; /* 버튼 배경색 */
+  color: #fff; /* 버튼 텍스트 색상 */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.copy-btn:hover {
+  background-color: #0056b3; /* 버튼 호버 시 색상 */
 }
