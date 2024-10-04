@@ -46,10 +46,11 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   
     // TRANSCRIPT 메시지 타입인지 확인
     if (msg.messageType === 'TRANSCRIPT') {
-      setEmotion(analyzeEmotion(clickedMsg)); // 감정 분석
+      // setEmotion(analyzeEmotion(clickedMsg)); // 감정 분석
       aiResponse = '이 메시지는 음성 텍스트 변환입니다.'; // AI 응답 필요시 여기에서 정의
       setShowLoadingModal(false);
       setShowResultModal(false); // ResultModal은 닫음
+      getAiSuggestion()
       setShowRecordResultModal(true); // RecordResultModal을 열음
     } else {
       if (!msg.aiSuggestion) {
