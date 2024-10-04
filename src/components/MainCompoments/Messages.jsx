@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Message from "./Message";
 import ResultModal from "../ResultModal/ResultModal";
+import RecordResultModal from "../RecordResultModal/RecordResultModal";
 import LoadingModal from "../LoadingModal/LoadingModal"; 
 import ImageModal from "../ImageModal/ImageModal"; // 이미지 모달 추가
 import "./style.css";
@@ -43,18 +44,30 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   
     let aiResponse = null;
   
-    if (!msg.aiSuggestion) {
-      aiResponse = await getAiSuggestion(msg);
+    // TRANSCRIPT 메시지 타입인지 확인
+    if (msg.messageType === 'TRANSCRIPT') {
+      setEmotion(analyzeEmotion(clickedMsg)); // 감정 분석
+      aiResponse = '이 메시지는 음성 텍스트 변환입니다.'; // AI 응답 필요시 여기에서 정의
+      setShowLoadingModal(false);
+      setShowResultModal(false); // ResultModal은 닫음
+      setShowRecordResultModal(true); // RecordResultModal을 열음
     } else {
-      aiResponse = msg.aiSuggestion;
+      if (!msg.aiSuggestion) {
+        aiResponse = await getAiSuggestion(msg);
+      } else {
+        aiResponse = msg.aiSuggestion;
+      }
+      
+      const detectedEmotion = analyzeEmotion(clickedMsg);
+      setEmotion(emotionMapping[detectedEmotion]);
+      setAiSuggestion(aiResponse);
+      setShowLoadingModal(false);
+      setShowResultModal(true);
     }
+};
 
-    const detectedEmotion = analyzeEmotion(clickedMsg);
-    setEmotion(emotionMapping[detectedEmotion]);
-    setAiSuggestion(aiResponse);
-    setShowLoadingModal(false);
-    setShowResultModal(true);
-  };
+// RecordResultModal을 보여주기 위한 상태 추가
+const [showRecordResultModal, setShowRecordResultModal] = useState(false);
 
   const analyzeEmotion = (message) => {
     if (message.includes('슬퍼')) return '슬픔';
@@ -120,6 +133,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
           onImageClick={() => handleImageClick(msg.filePath)} // 이미지 클릭 핸들러 추가
           messageType={msg.messageType} // 메시지 타입 전달
         />
+        
       ))}
 
       <LoadingModal loading={showLoadingModal} />
@@ -136,6 +150,17 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
       {showImageModal && (
         <ImageModal image={currentImage} onClose={closeImageModal} />
       )}
+      {/* RecordResultModal 추가 */}
+      {showRecordResultModal && (
+          <RecordResultModal 
+              show={showRecordResultModal} 
+              onClose={() => setShowRecordResultModal(false)} 
+              emotion={emotion}
+              resultText={clickedMessage} 
+              suggestedResponse={aiSuggestion} 
+          />
+      )}
+
     </div>
   );
 };
