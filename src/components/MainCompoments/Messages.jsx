@@ -17,6 +17,8 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   const [clickedMessage, setClickedMessage] = useState('');
   const [aiSuggestion, setAiSuggestion] = useState('');
   const { getCookies } = useCookieManager();
+  // RecordResultModal을 보여주기 위한 상태 추가
+  const [showRecordResultModal, setShowRecordResultModal] = useState(false);
 
   const emotionMapping = {
     화남: 0,
@@ -38,6 +40,21 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
   };
 
   const handleMessageClick = async (msg) => {
+    if (!msg) {
+      console.error("메시지가 정의되지 않았습니다.");
+      setShowLoadingModal(false);
+      return;
+    }
+
+    // msg.id가 없는 경우 함수 실행 중지 및 로그 출력
+    if (!msg.id) {
+      console.error("메시지의 ID를 찾을 수 없습니다.", msg); // msg 객체 로그 출력
+      setShowLoadingModal(false);
+      return;
+    }
+
+    console.log("handleMessageClick에서 받은 메시지:", msg); // msg 로그 출력으로 확인
+
     const clickedMsg = msg.message;
     setClickedMessage(clickedMsg);
     setShowLoadingModal(true);
@@ -47,10 +64,11 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
     // TRANSCRIPT 메시지 타입인지 확인
     if (msg.messageType === 'TRANSCRIPT') {
       // setEmotion(analyzeEmotion(clickedMsg)); // 감정 분석
-      aiResponse = '이 메시지는 음성 텍스트 변환입니다.'; // AI 응답 필요시 여기에서 정의
+      aiResponse = await getAiSuggestion(msg) // AI 응답 필요시 여기에서 정의
+      setEmotion(emotionMapping[analyzeEmotion(clickedMsg)]);
+      setAiSuggestion(aiResponse)
       setShowLoadingModal(false);
       setShowResultModal(false); // ResultModal은 닫음
-      getAiSuggestion()
       setShowRecordResultModal(true); // RecordResultModal을 열음
     } else {
       if (!msg.aiSuggestion) {
@@ -59,16 +77,15 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
         aiResponse = msg.aiSuggestion;
       }
       
-      const detectedEmotion = analyzeEmotion(clickedMsg);
-      setEmotion(emotionMapping[detectedEmotion]);
+      // const detectedEmotion = analyzeEmotion(clickedMsg);
+      // setEmotion(emotionMapping[detectedEmotion]);
+      setEmotion(emotionMapping[analyzeEmotion(clickedMsg)]);
       setAiSuggestion(aiResponse);
       setShowLoadingModal(false);
       setShowResultModal(true);
     }
 };
 
-// RecordResultModal을 보여주기 위한 상태 추가
-const [showRecordResultModal, setShowRecordResultModal] = useState(false);
 
   const analyzeEmotion = (message) => {
     if (message.includes('슬퍼')) return '슬픔';
@@ -80,6 +97,10 @@ const [showRecordResultModal, setShowRecordResultModal] = useState(false);
   };
 
   const getAiSuggestion = async (msg) => {
+    if (!msg || !msg.id) {
+      console.error("AI 요청을 위한 메시지 또는 메시지 ID가 없습니다.");
+      return "AI 제안이 없습니다.";
+    }
     const localAccessToken = getCookies().accessToken;
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/OpenAI/ask`, {
@@ -98,7 +119,7 @@ const [showRecordResultModal, setShowRecordResultModal] = useState(false);
       const data = await response.json();
   
       if (!data || !data.resultData) {
-        throw new Error(data.resultMsg);
+        throw new Error(data.resultMsg || "AI 서버 응답이 비어 있습니다.");
       }
   
       return data.resultData;
@@ -153,13 +174,15 @@ const [showRecordResultModal, setShowRecordResultModal] = useState(false);
       )}
       
       {/* RecordResultModal 추가 */}
-          <RecordResultModal 
-              show={showRecordResultModal} 
-              onClose={() => setShowRecordResultModal(false)} 
-              emotion={emotion}
-              resultText={clickedMessage} 
-              aiSuggestion={aiSuggestion}
-          />
+      {showRecordResultModal && (
+        <RecordResultModal 
+          show={showRecordResultModal} 
+          onClose={() => setShowRecordResultModal(false)} 
+          emotion={emotion}
+          resultText={clickedMessage} 
+          aiSuggestion={aiSuggestion} // AI 제안 전달
+        />
+      )}
     
     </div>
   );
