@@ -43,7 +43,6 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         const formattedMessages = data.resultData.messages.map(msg => {
           const sendTimeString = msg.sendTime;
           const sendTime = moment(sendTimeString).tz('Asia/Seoul').format('A hh시 mm분');
-
           return {
             id: msg.id,
             message: msg.message,
@@ -109,41 +108,62 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
     };
   }, [friendId, chatRoomId]);
 
-  // 음성 파일 전송 핸들러
-  const sendAudioFile = async (audioFile) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', audioFile);
 
-      const response = await fetch(`${process.env.REACT_APP_AI_SERVER}/predict/`, {
+  const handleTranscriptSend = async (transcript, audioUrl) => {
+    const localAccessToken = getCookies().accessToken;
+  
+    // audioUrl이 올바른 Blob으로 변환되는지 확인
+    const audioBlob = await fetch(audioUrl).then((r) => r.blob());
+  
+    // 파일 업로드 및 메시지 전송 처리
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'audio.mp3');
+  
+    try {
+      // 파일 업로드 요청
+      const uploadResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/upload`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localAccessToken}`,
+        },
         body: formData,
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  
+      if (!uploadResponse.ok) {
+        throw new Error('File upload failed');
       }
-      let result = await response.json();
-      console.log(result);
-      toast.success('음성이 정상적으로 분석 중입니다...');
+  
+      const result = await uploadResponse.json();
+      const fileId = result.resultData;
+  
+
+      const newMessage = {
+        message: transcript,
+        sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
+        messageType: 'VOICE',
+        fileId: fileId,
+        chatRoomId: chatRoomId,
+        senderId: userId,
+      };
+  
+      // WebSocket을 통해 메시지 전송
+      stompClient.current.publish({
+        destination: `/pub/file-message/${chatRoomId}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localAccessToken}`,
+        },
+        body: JSON.stringify(newMessage),
+      });
+  
+      scrollToBottom();
+      toast.success('음성 메시지가 전송되었습니다.');
     } catch (error) {
-      toast.error('음성 분석 중 오류 발생');
       console.error('Error:', error);
+      toast.error('음성 메시지 전송에 실패했습니다.');
     }
-  };
 
-// RecordModal의 전송 버튼 클릭 시 호출될 핸들러
-const handleTranscriptSend = (transcript) => {
-  const newMessage = {
-    id: Date.now(),
-    message: transcript,
-    sendTime: moment().tz('Asia/Seoul').format('A hh시 mm분'),
-    senderId: userId,
-    messageType: "TRANSCRIPT", // messageType이 'TRANSCRIPT'로 설정
-  };
 
-  setMessages((prevMessages) => [...prevMessages, newMessage]);
-  scrollToBottom();
 };
 
 
@@ -166,7 +186,7 @@ const handleTranscriptSend = (transcript) => {
         },
         body: JSON.stringify(newMessage)
       });
-
+      console.log(newMessage);
       setMessage("");
       scrollToBottom();
     }

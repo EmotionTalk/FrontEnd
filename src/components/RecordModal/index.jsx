@@ -267,12 +267,13 @@ const RecordModal = ({ closeRecordModal, onTranscriptSend, sendAudioFile }) => {
         {/* 결과 모달 */}
         {openResultModal && (
           <RecordResultForMeModal
+            audioUrl={audioUrl} // audioUrl 전달
             openAIResult={openAIResult}
             emotionResult={emotionResult}
             transcript={transcript} // 모달에 transcript 전달
             onClose={handleCloseResultModal}
             onSend={(transcript) => {
-              onTranscriptSend(transcript);
+              onTranscriptSend(transcript, audioUrl); // audioUrl을 함께 전달
               closeRecordModal(); // 전송 후 RecordModal을 닫음
             }}
           />

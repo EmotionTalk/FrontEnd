@@ -21,8 +21,7 @@ const emotionMapping = {
   4: { emotion: "평범함", icon: Ordinary },
   5: { emotion: "행복함", icon: Happy }
 };
-
-const RecordResultForMeModal = ({ openAIResult, emotionResult, transcript, onClose, onSend }) => {
+const RecordResultForMeModal = ({ audioUrl, openAIResult, emotionResult, transcript, onClose, onSend }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal-container">
@@ -75,7 +74,7 @@ const RecordResultForMeModal = ({ openAIResult, emotionResult, transcript, onClo
           <button
             className="send-button"
             onClick={() => {
-              onSend(transcript);  // `onSend` 호출로 `Chat`에 데이터 전송
+              onSend(transcript, audioUrl);  // `transcript`와 `audioUrl`을 함께 전달
               onClose();           // `onClose` 호출로 `RecordModal` 닫기
             }}
           >
