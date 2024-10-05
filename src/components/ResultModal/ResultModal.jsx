@@ -52,7 +52,7 @@ const ResultModal = ({ show, onClose, emotion, userMessage, aiSuggestion }) => {
 
           <div className="ai-suggestion">
             <p className="suggestion-title">답변 예시입니다:</p>
-            <p className="suggestion-content">{aiSuggestion}</p>
+            <p className="suggestion-content">{aiSuggestion || "AI 제안이 없습니다."}</p>
           </div>
         </div>
 
