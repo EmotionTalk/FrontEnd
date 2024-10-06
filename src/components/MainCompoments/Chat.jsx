@@ -109,7 +109,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
   }, [friendId, chatRoomId]);
 
 
-  const handleTranscriptSend = async (transcript, audioUrl) => {
+  const handleTranscriptSend = async (transcript, audioUrl, emotionResult) => {
     const localAccessToken = getCookies().accessToken;
   
     // audioUrl이 올바른 Blob으로 변환되는지 확인
@@ -141,6 +141,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         message: transcript,
         sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
         messageType: 'VOICE',
+        emotionNum: emotionResult,
         fileId: fileId,
         chatRoomId: chatRoomId,
         senderId: userId,
@@ -175,6 +176,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         message: message,
         sendTime: moment().tz('Asia/Seoul').format('yyyy-MM-DDTHH:mm:ss'),
         messageType: "TEXT",
+        emotionNum : 4,
         chatRoomId: chatRoomId,
       };
 

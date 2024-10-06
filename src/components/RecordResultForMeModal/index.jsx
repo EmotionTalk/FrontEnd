@@ -74,7 +74,7 @@ const RecordResultForMeModal = ({ audioUrl, openAIResult, emotionResult, transcr
           <button
             className="send-button"
             onClick={() => {
-              onSend(transcript, audioUrl);  // `transcript`와 `audioUrl`을 함께 전달
+              onSend(transcript, audioUrl, emotionResult);  // `transcript`와 `audioUrl`을 함께 전달
               onClose();           // `onClose` 호출로 `RecordModal` 닫기
             }}
           >
