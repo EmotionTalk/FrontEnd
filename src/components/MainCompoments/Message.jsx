@@ -42,7 +42,7 @@ const Message = forwardRef(({ message, sendTime, image, sender, profileImage, us
             <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} style={{ display: 'none' }} />
           </div>
         ) : image ? (
-          <img src={image} alt="sent" className="messageImage" onClick={onImageClick} />
+          <img src={image} alt="sent" className="messageImage"  onClick={onImageClick} />
         ) : (
           <p onClick={handleMessageClick}>{message}</p>
         )}

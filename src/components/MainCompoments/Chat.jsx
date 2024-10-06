@@ -136,6 +136,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
   
       const result = await uploadResponse.json();
       const fileId = result.resultData;
+      console.log(fileId)
   
 
       const newMessage = {
@@ -146,7 +147,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         fileId: fileId,
         chatRoomId: chatRoomId,
         senderId: userId,
-        audioUrl: audioUrl
+        // audioUrl: audioUrl
       };
   
       // WebSocket을 통해 메시지 전송
