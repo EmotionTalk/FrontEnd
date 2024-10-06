@@ -33,7 +33,7 @@ const Message = forwardRef(({ message, sendTime, image, sender, profileImage, us
         <span>{userName}</span>
       </div>
       <div className="messageContent">
-      {messageType === 'TRANSCRIPT' && audioUrl ? (
+      {messageType === 'VOICE' && audioUrl ? (
           <div className="transcript-content">
             <button className="audio-toggle-btn" onClick={handleAudioToggle}>
               <img src={isPlaying ? PauseIcon : PlayIcon} alt="play/pause" className="audio-control-icon" />
