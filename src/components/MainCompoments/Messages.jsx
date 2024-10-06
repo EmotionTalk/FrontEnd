@@ -148,6 +148,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
           message={msg.messageType === 'IMAGE' ? null : msg.message}
           sendTime={msg.sendTime}
           image={msg.messageType === 'IMAGE' ? msg.filePath : null}
+          audioUrl={msg.audioUrl}
           sender={msg.senderId === userId ? 'me' : 'other'}
           profileImage={msg.senderId === userId ? myProfile : userProfile}
           userName={msg.senderId === userId ? '나' : userName}
