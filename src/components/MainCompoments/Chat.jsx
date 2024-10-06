@@ -50,6 +50,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
             senderId: msg.senderId,
             filePath: msg.filePath,
             messageType: msg.messageType,
+            audioUrl: msg.messageType === 'VOICE' ? msg.filePath : null,
             aiSuggestion: msg.aiSuggestion,
             emotionNum: msg.emotionNum,
           };
@@ -135,6 +136,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
   
       const result = await uploadResponse.json();
       const fileId = result.resultData;
+      console.log(fileId)
   
 
       const newMessage = {
@@ -145,6 +147,7 @@ const Chat = ({ onClose, userName, userProfile, myProfile, friendId }) => {
         fileId: fileId,
         chatRoomId: chatRoomId,
         senderId: userId,
+        // audioUrl: audioUrl
       };
   
       // WebSocket을 통해 메시지 전송

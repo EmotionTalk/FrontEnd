@@ -223,6 +223,45 @@
     color: #0056b3; /* 실시간 음성 텍스트 변환 메시지 텍스트 색상 */
     border-radius: 10px 0px 10px 10px; /* 메시지 모서리 둥글게 */
 }
+/* 실시간 음성 텍스트 변환 메시지 스타일 */
+.message.transcript-message .messageContent {
+    display: flex;
+    align-items: center;
+  }
+  
+  .transcript-content {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼과 텍스트 간격 */
+  }
+  
+  /* 재생/일시정지 버튼 스타일 */
+  .audio-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .audio-control-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* 음성 텍스트 메시지의 스타일 */
+  .message.transcript-message .messageContent p {
+    background-color: #d1e7ff; /* 음성 텍스트 변환 메시지 배경색 */
+    color: #0056b3; /* 음성 텍스트 색상 */
+    border-radius: 10px 10px 10px 10px; /* 메시지 모서리 둥글게 */
+    padding: 10px;
+    margin: 0;
+  }
+  
+  /* 텍스트 메시지와 버튼 간격 조절 */
+  .transcript-content p {
+    margin: 0;
+    padding: 10px;
+    border-radius: 10px;
+  }
 .input{
     height: 50px;
     background-color: rgb(255, 255, 255);

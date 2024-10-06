@@ -87,11 +87,45 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
 };
 
 
+  // const getAiSuggestion = async (msg) => {
+  //   if (!msg || !msg.id) {
+  //     console.error("AI 요청을 위한 메시지 또는 메시지 ID가 없습니다.");
+  //     return "AI 제안이 없습니다.";
+  //   }
+  //   const localAccessToken = getCookies().accessToken;
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/OpenAI/ask`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${localAccessToken}`,
+  //       },
+  //       body: JSON.stringify({ id: msg.id })
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error('AI 서버 응답 오류');
+  //     }
+  
+  //     const data = await response.json();
+  
+  //     if (!data || !data.resultData) {
+  //       throw new Error(data.resultMsg || "AI 서버 응답이 비어 있습니다.");
+  //     }
+  
+  //     return data.resultData;
+  //   } catch (error) {
+  //     console.error('Error fetching AI suggestion:', error.message);
+  //     return ['적절한 답변을 고민해보세요.'];
+  //   }
+  // };
   const getAiSuggestion = async (msg) => {
-    if (!msg || !msg.id) {
-      console.error("AI 요청을 위한 메시지 또는 메시지 ID가 없습니다.");
-      return "AI 제안이 없습니다.";
+    // 이미 aiSuggestion이 존재하면 서버에 요청하지 않고 그대로 반환
+    if (msg.aiSuggestion) {
+      console.log("AI 응답이 이미 존재합니다:", msg.aiSuggestion);
+      return msg.aiSuggestion;
     }
+  
     const localAccessToken = getCookies().accessToken;
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/OpenAI/ask`, {
@@ -139,6 +173,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
           message={msg.messageType === 'IMAGE' ? null : msg.message}
           sendTime={msg.sendTime}
           image={msg.messageType === 'IMAGE' ? msg.filePath : null}
+          audioUrl={msg.messageType === 'VOICE' ? msg.filePath : null}
           sender={msg.senderId === userId ? 'me' : 'other'}
           profileImage={msg.senderId === userId ? myProfile : userProfile}
           userName={msg.senderId === userId ? '나' : userName}

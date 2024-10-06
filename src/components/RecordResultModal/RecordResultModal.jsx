@@ -23,6 +23,8 @@ const RecordResultModal = ({ show, onClose, emotion, resultText, aiSuggestion })
 
   const currentEmotion = emotionMapping[emotion] || {};
 
+  console.log("RecordResultModal의 aiSuggestion:", aiSuggestion);
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(aiSuggestion)
       .then(() => {
