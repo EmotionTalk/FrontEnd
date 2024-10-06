@@ -65,7 +65,7 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
     if (msg.messageType === 'VOICE') {
       // setEmotion(analyzeEmotion(clickedMsg)); // 감정 분석
       aiResponse = await getAiSuggestion(msg) // AI 응답 필요시 여기에서 정의
-      setEmotion(emotionMapping[analyzeEmotion(clickedMsg)]);
+      setEmotion(msg.emotionNum);
       setAiSuggestion(aiResponse)
       setShowLoadingModal(false);
       setShowResultModal(false); // ResultModal은 닫음
@@ -79,22 +79,13 @@ const Messages = ({ userName, messages, userId, userProfile, myProfile }) => {
       
       // const detectedEmotion = analyzeEmotion(clickedMsg);
       // setEmotion(emotionMapping[detectedEmotion]);
-      setEmotion(emotionMapping[analyzeEmotion(clickedMsg)]);
+      setEmotion(msg.emotionNum);
       setAiSuggestion(aiResponse);
       setShowLoadingModal(false);
       setShowResultModal(true);
     }
 };
 
-
-  const analyzeEmotion = (message) => {
-    if (message.includes('슬퍼')) return '슬픔';
-    if (message.includes('행복해')) return '행복함';
-    if (message.includes('싫어')) return '싫어함';
-    if (message.includes('화나')) return '화남';
-    if (message.includes('두려워')) return '두려움';
-    return '평범함';
-  };
 
   const getAiSuggestion = async (msg) => {
     if (!msg || !msg.id) {

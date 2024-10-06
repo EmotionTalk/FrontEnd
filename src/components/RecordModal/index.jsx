@@ -13,7 +13,7 @@ import { useCookieManager } from '../../customHook/useCookieManager';
 import RecordResultForMeModal from "../../components/RecordResultForMeModal";
 
 
-const RecordModal = ({ closeRecordModal, onTranscriptSend, sendAudioFile }) => {
+const RecordModal = ({ closeRecordModal, onTranscriptSend }) => {
   const [isRecording, setIsRecording] = useState(false); // 녹음 중인지 여부
   const [isRecorded, setIsRecorded] = useState(false); // 녹음 완료 여부
   const [isPlaying, setIsPlaying] = useState(false); // 오디오 재생 중인지 여부
@@ -161,8 +161,8 @@ const RecordModal = ({ closeRecordModal, onTranscriptSend, sendAudioFile }) => {
             // 감정 예측 결과 수신
             const result = await aiResponse.json();
             setEmotionResult(result.prediction); // 감정 예측 결과 설정
-            console.log("AI 예측 결과:", result);
-
+            console.log("AI 예측 결과:", result.prediction);
+      
             toast.success('감정 예측 성공')
 
             // 2. openAI 서버에 텍스트 전송
@@ -273,7 +273,7 @@ const RecordModal = ({ closeRecordModal, onTranscriptSend, sendAudioFile }) => {
             transcript={transcript} // 모달에 transcript 전달
             onClose={handleCloseResultModal}
             onSend={(transcript) => {
-              onTranscriptSend(transcript, audioUrl); // audioUrl을 함께 전달
+              onTranscriptSend(transcript, audioUrl, emotionResult); // audioUrl을 함께 전달
               closeRecordModal(); // 전송 후 RecordModal을 닫음
             }}
           />
