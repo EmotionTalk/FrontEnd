@@ -52,6 +52,13 @@ EmotionTalk은 지능이 낮은 지적 장애인이 채팅을 하면서 자신�
 
 ---
 
+## ERD
+![erd](https://github.com/user-attachments/assets/d10c3218-3ba3-42e5-be6d-c93fa975a640)
+
+
+
+---
+
 ## 🚀 프로젝트 실행 방법  
 
 
